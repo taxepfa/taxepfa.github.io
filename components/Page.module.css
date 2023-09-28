@@ -1,0 +1,8 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-md);
+  @media (min-width: $mantine-breakpoint-xs) {
+    gap: var(--mantine-spacing-xl);
+  }
+}

@@ -1,0 +1,15 @@
+.root {
+  margin-top: var(--mantine-spacing-md) !important;
+  @media (min-width: $mantine-breakpoint-xs) {
+    margin-top: var(--mantine-spacing-xl) !important;
+  }
+}
+
+.link {
+  text-decoration: none;
+  color: var(--mantine-color-blue-7);
+  &:hover {
+    color: var(--mantine-color-blue-5);
+    text-decoration: underline;
+  }
+}

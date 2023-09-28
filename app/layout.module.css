@@ -1,0 +1,13 @@
+.body {
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8));
+}
+
+.container {
+  padding-top: calc(rem(56px) + var(--mantine-spacing-md));
+  padding-bottom: calc(rem(56px) + var(--mantine-spacing-md));
+
+  @media (min-width: $mantine-breakpoint-xs) {
+    padding-top: calc(rem(56px) + var(--mantine-spacing-xl));
+    padding-bottom: 2rem;
+  }
+}

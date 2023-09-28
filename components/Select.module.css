@@ -1,0 +1,6 @@
+.label {
+  display: none;
+  @media (min-width: $mantine-breakpoint-xs) {
+    display: inline-block;
+  }
+}

@@ -1,0 +1,36 @@
+import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
+
+import { ColorSchemeScript, Container, MantineProvider } from '@mantine/core';
+import { Notifications } from '@mantine/notifications';
+import { Footer } from '~/components/Footer';
+import { Header } from '~/components/Header';
+import { theme } from '~/theme';
+import classes from './layout.module.css';
+
+export const metadata = {
+  title: 'Taxe PFA în 2024',
+  description: 'Calculează-ți taxele pe care trebuie să le plătești ca PFA în 2024',
+};
+
+export default function RootLayout({ children }: React.PropsWithChildren) {
+  return (
+    <html lang="ro">
+      <head>
+        <ColorSchemeScript />
+        <link rel="shortcut icon" href="/favicon.svg" />
+        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no" />
+      </head>
+      <body className={classes.body}>
+        <MantineProvider theme={theme}>
+          <Notifications position="top-center" />
+          <Header />
+          <Container size="sm" className={classes.container}>
+            {children}
+            <Footer />
+          </Container>
+        </MantineProvider>
+      </body>
+    </html>
+  );
+}
