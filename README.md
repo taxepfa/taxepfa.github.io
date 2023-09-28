@@ -1,4 +1,4 @@
-# [taxepfa.github.io](taxepfa.github.io)
+# [taxepfa.github.io](https://taxepfa.github.io)
 
 A simple tax calculator for freelancers working as sole traders (PFA) in Romania.
 
