@@ -1,4 +1,4 @@
-name: Publish npm & deploy docs
+name: Publish website
 
 on:
   # Runs on pushes targeting the default branch
