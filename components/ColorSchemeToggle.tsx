@@ -2,6 +2,7 @@
 
 import { Box, useComputedColorScheme, useMantineColorScheme } from '@mantine/core';
 import { IconMoon, IconSun } from '@tabler/icons-react';
+import clsx from 'clsx';
 import classes from './ColorSchemeToggle.module.css';
 
 export type ColorSchemeToggleProps = {
@@ -17,7 +18,7 @@ export function ColorSchemeToggle({ className, textClassName, text }: ColorSchem
   return (
     <Box
       component="button"
-      className={className}
+      className={clsx(classes.root, className)}
       aria-label="Schimbă tema"
       onClick={() => setColorScheme(computedColorScheme === 'light' ? 'dark' : 'light')}
     >

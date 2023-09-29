@@ -1,4 +1,5 @@
 export const YEAR = 2024;
+export const NEXT_YEAR = YEAR + 1;
 
 export const PENSION_PERCENTAGE = 0.25;
 export const HEALTH_PERCENTAGE = 0.1;
@@ -41,3 +42,11 @@ export const EXCHANGE_RATE_FORMATTER = new Intl.NumberFormat('ro-RO', {
   minimumFractionDigits: 4,
   maximumFractionDigits: 4,
 });
+
+export const TAXES = ['healthTaxPercentage', 'pensionTaxPercentage', 'incomeTaxPercentage'] as const;
+
+export const TAX_NAMES = {
+  healthTaxPercentage: 'CASS',
+  pensionTaxPercentage: 'CAS',
+  incomeTaxPercentage: 'Imp. pe venit',
+} as const;
