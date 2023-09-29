@@ -1,12 +1,17 @@
-import { GridCol, NumberInput, Text } from '@mantine/core';
+import { GridCol, NumberInput } from '@mantine/core';
 import { useSnapshot } from 'valtio';
-import { CURRENCIES, DEDUCTIBLE_EXPENSES_INTERVALS, DeductibleExpensesInterval } from '~/lib/config';
-import { store } from '~/lib/store';
+import {
+  CURRENCIES,
+  DEDUCTIBLE_EXPENSES_INTERVALS,
+  DeductibleExpensesInterval,
+  UNPAID_INTERVALS,
+  UnpaidInterval,
+} from '~/lib/config';
+import { state } from '~/lib/state';
 import { Select } from './Select';
 
 export function CommonInputGridCols() {
-  const commonSnapshot = useSnapshot(store.common);
-  const settingsSnapshot = useSnapshot(store.settings);
+  const commonSnapshot = useSnapshot(state.common);
 
   return (
     <>
@@ -16,7 +21,7 @@ export function CommonInputGridCols() {
           label="Cheltuieli deductibile"
           min={0}
           value={commonSnapshot.deductibleExpenses || ''}
-          onChange={(val) => (store.common.deductibleExpenses = typeof val === 'number' ? val : null)}
+          onChange={(val) => (state.common.deductibleExpenses = typeof val === 'number' ? val : null)}
         />
       </GridCol>
       <GridCol span={{ base: 6, xs: 3 }}>
@@ -24,7 +29,7 @@ export function CommonInputGridCols() {
           ariaLabel="Moneda cheltuielilor deductibile"
           data={CURRENCIES}
           value={commonSnapshot.deductibleExpensesCurrency}
-          onChange={(val: string) => (store.common.deductibleExpensesCurrency = val)}
+          onChange={(val: string) => (state.common.deductibleExpensesCurrency = val)}
         />
       </GridCol>
       <GridCol span={{ base: 6, xs: 3 }}>
@@ -32,24 +37,24 @@ export function CommonInputGridCols() {
           ariaLabel="Intervalul cheltuielilor deductibile"
           data={DEDUCTIBLE_EXPENSES_INTERVALS}
           value={commonSnapshot.deductibleExpensesInterval}
-          onChange={(val: string) => (store.common.deductibleExpensesInterval = val as DeductibleExpensesInterval)}
+          onChange={(val: string) => (state.common.deductibleExpensesInterval = val as DeductibleExpensesInterval)}
         />
       </GridCol>
-      <GridCol mb="xs">
+      <GridCol span={{ xs: 6 }}>
         <NumberInput
           hideControls
-          label="Concediu neplătit"
+          label="Nu vei lucra"
           min={0}
-          max={(settingsSnapshot.workingDaysPerMonth ?? 20) * 12}
-          rightSectionWidth={50}
-          rightSectionPointerEvents="none"
-          rightSection={
-            <Text c="dimmed" fz="sm" w="100%" pr="xs" ta="right">
-              zile
-            </Text>
-          }
-          value={commonSnapshot.unpaidVacationDays || ''}
-          onChange={(val) => (store.common.unpaidVacationDays = typeof val === 'number' ? val : null)}
+          value={commonSnapshot.unpaidTime || ''}
+          onChange={(val) => (state.common.unpaidTime = typeof val === 'number' ? val : null)}
+        />
+      </GridCol>
+      <GridCol span={{ xs: 6 }}>
+        <Select
+          ariaLabel="Unități de măsură ale timpului în care nu vei lucra"
+          data={UNPAID_INTERVALS}
+          value={commonSnapshot.unpaidInterval}
+          onChange={(val: string) => (state.common.unpaidInterval = val as UnpaidInterval)}
         />
       </GridCol>
     </>

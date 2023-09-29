@@ -1,3 +1,4 @@
+import { YEAR } from '~/lib/config';
 import classes from './Title.module.css';
 
 export function Title() {
@@ -21,7 +22,7 @@ export function Title() {
         />
       </svg>
       <span className={classes.text}>
-        <span className={classes.dynamicText}>Taxe </span>PFA<span className={classes.dynamicText}> în</span> 2024
+        <span className={classes.dynamicText}>Taxe </span>PFA<span className={classes.dynamicText}> în</span> {YEAR}
       </span>
     </h1>
   );
