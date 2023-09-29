@@ -1,7 +1,7 @@
 import { Text } from '@mantine/core';
 import { BASE_CURRENCY } from '~/lib/config';
 import { ExchangeRates } from '~/lib/exchangeRates';
-import { safeFormatExchangeRate } from '~/lib/format';
+import { formatExchangeRate } from '~/lib/format';
 
 export type ExchangeRateNoticeProps = {
   exchangeRates: ExchangeRates | undefined;
@@ -33,7 +33,7 @@ export function ExchangeRatesNotice({
   return usedExchangeRatesCount ? (
     <Text size="xs" c="dimmed" ta="center">
       Curs{multipleExchangeRates ? 'uri' : ''} de schimb folosit{multipleExchangeRates ? 'e' : ''}:{' '}
-      {usedExchangeRates.map((rate) => safeFormatExchangeRate(rate)).join(' și ')}.
+      {usedExchangeRates.map((rate) => formatExchangeRate(rate)).join(' și ')}.
     </Text>
   ) : null;
 }

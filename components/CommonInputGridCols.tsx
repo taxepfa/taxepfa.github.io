@@ -6,6 +6,7 @@ import { Select } from './Select';
 
 export function CommonInputGridCols() {
   const commonSnapshot = useSnapshot(store.common);
+  const settingsSnapshot = useSnapshot(store.settings);
 
   return (
     <>
@@ -14,8 +15,8 @@ export function CommonInputGridCols() {
           hideControls
           label="Cheltuieli deductibile"
           min={0}
-          value={commonSnapshot.deductibleExpenses}
-          onChange={(val) => (store.common.deductibleExpenses = typeof val === 'number' ? val : NaN)}
+          value={commonSnapshot.deductibleExpenses || ''}
+          onChange={(val) => (store.common.deductibleExpenses = typeof val === 'number' ? val : null)}
         />
       </GridCol>
       <GridCol span={{ base: 6, xs: 3 }}>
@@ -39,6 +40,7 @@ export function CommonInputGridCols() {
           hideControls
           label="Concediu neplătit"
           min={0}
+          max={(settingsSnapshot.workingDaysPerMonth ?? 20) * 12}
           rightSectionWidth={50}
           rightSectionPointerEvents="none"
           rightSection={
@@ -46,8 +48,8 @@ export function CommonInputGridCols() {
               zile
             </Text>
           }
-          value={commonSnapshot.unpaidVacationDays}
-          onChange={(val) => (store.common.unpaidVacationDays = typeof val === 'number' ? val : NaN)}
+          value={commonSnapshot.unpaidVacationDays || ''}
+          onChange={(val) => (store.common.unpaidVacationDays = typeof val === 'number' ? val : null)}
         />
       </GridCol>
     </>

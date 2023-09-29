@@ -43,15 +43,9 @@ export default function ChartPage() {
               required
               min={0}
               label="Venit de la"
-              value={chartSnapshot.incomeFrom}
+              value={chartSnapshot.incomeFrom || ''}
               onChange={(val) => (store.chart.incomeFrom = typeof val === 'number' ? val : NaN)}
-              error={
-                isNaN(chartSnapshot.incomeFrom)
-                  ? 'Scrie o valoare'
-                  : chartSnapshot.incomeFrom < 0
-                  ? 'Trebuie să fie număr pozitiv'
-                  : null
-              }
+              error={chartSnapshot.incomeFrom == null ? 'Scrie o valoare' : null}
             />
           </GridCol>
           <GridCol span={{ base: 6, xs: 3 }}>
@@ -60,15 +54,9 @@ export default function ChartPage() {
               required
               min={chartSnapshot.incomeFrom || 0}
               label="Până la"
-              value={chartSnapshot.incomeTo}
+              value={chartSnapshot.incomeTo || ''}
               onChange={(val) => (store.chart.incomeTo = typeof val === 'number' ? val : NaN)}
-              error={
-                isNaN(chartSnapshot.incomeTo)
-                  ? 'Scrie o valoare'
-                  : chartSnapshot.incomeTo <= chartSnapshot.incomeFrom
-                  ? `Trebuie să fie mai mare de ${formatAsInteger(chartSnapshot.incomeFrom)}`
-                  : null
-              }
+              error={chartSnapshot.incomeTo == null ? 'Scrie o valoare' : null}
             />
           </GridCol>
           <GridCol span={{ base: 6, xs: 3 }}>

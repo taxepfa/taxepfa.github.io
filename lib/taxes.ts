@@ -18,40 +18,20 @@ export function computeTaxes({
   settingsSnapshot: SettingsSnapshot;
   exchangeRates: ExchangeRates | undefined;
 }) {
-  unpaidVacationDays = unpaidVacationDays || 0;
+  unpaidVacationDays = Math.min(unpaidVacationDays || 0, (workingDaysPerMonth || 0) * 12);
   deductibleExpenses = deductibleExpenses || 0;
-
-  let totalIncome = NaN;
-  let pensionTaxAmount = NaN;
-  let pensionTaxPercentage = NaN;
-  let healthTaxAmount = NaN;
-  let healthTaxPercentage = NaN;
-  let incomeTaxAmount = NaN;
-  let incomeTaxPercentage = NaN;
-  let totalTaxAmount = NaN;
-  let totalTaxPercentage = NaN;
 
   if (
     !exchangeRates ||
-    isNaN(income) ||
-    isNaN(minimumWage) ||
-    isNaN(workingDaysPerMonth) ||
-    isNaN(workingHoursPerDay)
+    income === null ||
+    minimumWage === null ||
+    workingDaysPerMonth === null ||
+    workingHoursPerDay === null
   ) {
-    return {
-      totalIncome,
-      totalTaxAmount,
-      totalTaxPercentage,
-      pensionTaxAmount,
-      pensionTaxPercentage,
-      healthTaxAmount,
-      healthTaxPercentage,
-      incomeTaxAmount,
-      incomeTaxPercentage,
-    };
+    return;
   }
 
-  totalIncome = income;
+  let totalIncome = income;
   if (incomeInterval === 'hourly') {
     totalIncome *= workingDaysPerMonth * workingHoursPerDay * 12 - unpaidVacationDays * workingHoursPerDay;
   } else if (incomeInterval === 'daily') {
@@ -64,15 +44,16 @@ export function computeTaxes({
     totalIncome *= exchangeRates[incomeCurrency];
   }
 
-  pensionTaxAmount = 0;
+  let pensionTaxAmount = 0;
   if (totalIncome >= minimumWage * 24) {
     pensionTaxAmount = minimumWage * 24 * PENSION_PERCENTAGE;
   } else if (totalIncome >= minimumWage * 12) {
     pensionTaxAmount = minimumWage * 12 * PENSION_PERCENTAGE;
   }
-  pensionTaxPercentage = (pensionTaxAmount / totalIncome) * 100;
 
-  healthTaxAmount = 0;
+  const pensionTaxPercentage = totalIncome === 0 ? 0 : (pensionTaxAmount / totalIncome) * 100;
+
+  let healthTaxAmount = 0;
   if (totalIncome >= minimumWage * 60) {
     healthTaxAmount = minimumWage * 60 * HEALTH_PERCENTAGE;
   } else if (totalIncome >= minimumWage * 6) {
@@ -80,7 +61,7 @@ export function computeTaxes({
   } else {
     healthTaxAmount = minimumWage * 6 * HEALTH_PERCENTAGE;
   }
-  healthTaxPercentage = (healthTaxAmount / totalIncome) * 100;
+  const healthTaxPercentage = (healthTaxAmount / totalIncome) * 100;
 
   let totalDeductibleExpenses = deductibleExpenses;
   if (deductibleExpensesInterval === 'monthly') {
@@ -90,13 +71,13 @@ export function computeTaxes({
     totalDeductibleExpenses *= exchangeRates[deductibleExpensesCurrency];
   }
 
-  let taxableIncome = Math.max(totalIncome - pensionTaxAmount - healthTaxAmount - totalDeductibleExpenses, 0);
+  const taxableIncome = Math.max(totalIncome - pensionTaxAmount - healthTaxAmount - totalDeductibleExpenses, 0);
 
-  incomeTaxAmount = taxableIncome * 0.1;
-  incomeTaxPercentage = (incomeTaxAmount / totalIncome) * 100;
+  const incomeTaxAmount = taxableIncome * 0.1;
+  const incomeTaxPercentage = totalIncome === 0 ? 0 : (incomeTaxAmount / totalIncome) * 100;
 
-  totalTaxAmount = pensionTaxAmount + healthTaxAmount + incomeTaxAmount;
-  totalTaxPercentage = (totalTaxAmount / totalIncome) * 100;
+  const totalTaxAmount = pensionTaxAmount + healthTaxAmount + incomeTaxAmount;
+  const totalTaxPercentage = (totalTaxAmount / totalIncome) * 100;
 
   return {
     totalIncome,
@@ -142,7 +123,14 @@ export function useTaxesChart({
     incomeTaxPercentage: number;
   }[] = [];
 
-  if (!exchangeRates || isNaN(incomeFrom) || isNaN(incomeTo)) {
+  if (
+    !exchangeRates ||
+    incomeFrom === null ||
+    incomeTo === null ||
+    settingsSnapshot.minimumWage === null ||
+    settingsSnapshot.workingDaysPerMonth === null ||
+    settingsSnapshot.workingHoursPerDay === null
+  ) {
     return {
       data,
       exchangeRates,
@@ -156,7 +144,7 @@ export function useTaxesChart({
       commonSnapshot,
       settingsSnapshot,
       exchangeRates,
-    });
+    })!;
 
     data.push({
       income: i,

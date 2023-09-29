@@ -1,0 +1,4 @@
+:focus-visible {
+  outline: var(--mantine-color-blue-6) dashed 1px;
+  outline-offset: 2px;
+}
