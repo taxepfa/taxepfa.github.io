@@ -13,7 +13,7 @@ export type ChartTooltipProps = {
 };
 
 export function ChartTooltip(props: ChartTooltipProps) {
-  const { income, incomeCurrency, healthTaxPercentage, pensionTaxPercentage, incomeTaxPercentage } = props;
+  const { income, incomeCurrency, healthTaxPercentage, pensionTaxPercentage, incomeTaxPercentage, taxColors } = props;
   const totalTaxPercentage = healthTaxPercentage + pensionTaxPercentage + incomeTaxPercentage;
   return (
     <Box py="xs" className={classes.root}>
@@ -25,16 +25,20 @@ export function ChartTooltip(props: ChartTooltipProps) {
           {formatAsInteger(income)} {incomeCurrency}
         </Text>
       </Group>
-      {TAXES.map((tax) => (
-        <Group key={tax} justify="space-between" px="xs">
-          <Text size="xs" c={props.taxColors[tax]} fw="bold">
-            {TAX_NAMES[tax]}:
-          </Text>
-          <Text size="xs" c={props.taxColors[tax]} fw="bold">
-            {props[tax] > 100 ? 'peste 100%' : formatAsDecimalPercentage(props[tax])}
-          </Text>
-        </Group>
-      ))}
+      {TAXES.map((tax) => {
+        const taxPercentage = props[tax];
+        const color = taxColors[tax];
+        return (
+          <Group key={tax} justify="space-between" px="xs">
+            <Text size="xs" c={color} fw="bold">
+              {TAX_NAMES[tax]}:
+            </Text>
+            <Text size="xs" c={color} fw="bold">
+              {taxPercentage > 100 ? 'peste 100%' : formatAsDecimalPercentage(taxPercentage)}
+            </Text>
+          </Group>
+        );
+      })}
       <Group justify="space-between" px="xs" pt={8} mt={6} className={classes.footer}>
         <Text size="xs" fw="bold">
           Total taxe:
