@@ -103,7 +103,7 @@ export default function ChartPage() {
               angle={-45}
               textAnchor="end"
             />
-            <YAxis domain={[0, 100]} allowDataOverflow tickFormatter={(v) => `${v}%`} />
+            <YAxis domain={[0, 50]} allowDataOverflow tickFormatter={(v) => `${v}%`} />
             <Tooltip
               content={({ active, payload }) => {
                 if (!active || !payload) return null;
