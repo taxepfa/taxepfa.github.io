@@ -21,14 +21,14 @@ export type State = {
     unpaidInterval: UnpaidInterval;
   };
   settings: {
-    minimumWage: number | null;
-    workingDaysPerMonth: number | null;
-    workingDaysPerWeek: number | null;
-    workingHoursPerDay: number | null;
+    minimumWage: number;
+    workingDaysPerMonth: number;
+    workingDaysPerWeek: number;
+    workingHoursPerDay: number;
   };
 };
 
-export const state = proxy<State>({
+export const initialState: State = {
   calculator: {
     income: 3000,
     incomeCurrency: 'EUR',
@@ -53,7 +53,9 @@ export const state = proxy<State>({
     workingDaysPerWeek: 5,
     workingHoursPerDay: 8,
   },
-});
+};
+
+export const state = proxy<State>(initialState);
 
 subscribe(state, () => {
   localStorage.setItem(LOCAL_STORAGE_STATE_KEY, JSON.stringify(state));
