@@ -1,3 +1,7 @@
+.root {
+  justify-content: center;
+}
+
 .dark {
   @mixin dark {
     display: none;

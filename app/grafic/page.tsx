@@ -4,20 +4,15 @@ import { Card, Grid, GridCol, LoadingOverlay, NumberInput, useMantineTheme } fro
 import { useElementSize } from '@mantine/hooks';
 import { Area, AreaChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis } from 'recharts';
 import { useSnapshot } from 'valtio';
+import { ChartTooltip } from '~/components/ChartTooltip';
 import { CommonInputGridCols } from '~/components/CommonInputGridCols';
 import { ExchangeRatesNotice } from '~/components/ExchageRatesNotice';
 import { Page } from '~/components/Page';
 import { Select } from '~/components/Select';
-import { CURRENCIES, INCOME_INTERVALS, IncomeInterval } from '~/lib/config';
-import { formatAsDecimalPercentage, formatAsInteger } from '~/lib/format';
+import { CURRENCIES, INCOME_INTERVALS, IncomeInterval, TAXES, TAX_NAMES } from '~/lib/config';
+import { formatAsInteger } from '~/lib/format';
 import { store } from '~/lib/store';
 import { useTaxesChart } from '~/lib/taxes';
-
-const TAX_NAMES = {
-  healthTaxPercentage: 'CASS',
-  pensionTaxPercentage: 'CAS',
-  incomeTaxPercentage: 'Imp. pe venit',
-};
 
 export default function ChartPage() {
   const chartSnapshot = useSnapshot(store.chart);
@@ -32,9 +27,11 @@ export default function ChartPage() {
   const { ref, width } = useElementSize();
   const { colors } = useMantineTheme();
 
-  const healthTaxColor = colors.red[6];
-  const pensionTaxColor = colors.blue[6];
-  const incomeTaxColor = colors.green[6];
+  const taxColors = {
+    healthTaxPercentage: colors.red[6],
+    pensionTaxPercentage: colors.blue[6],
+    incomeTaxPercentage: colors.green[6],
+  } as const;
 
   return (
     <Page>
@@ -120,35 +117,20 @@ export default function ChartPage() {
             />
             <YAxis domain={[0, 100]} allowDataOverflow tickFormatter={(v) => `${v}%`} />
             <Tooltip
-              labelFormatter={(v) => `${formatAsInteger(v)} ${chartSnapshot.incomeCurrency}`}
-              formatter={(v: number, name) => {
-                return [
-                  v > 100 ? 'peste 100%' : formatAsDecimalPercentage(v),
-                  TAX_NAMES[name as keyof typeof TAX_NAMES],
-                ];
+              content={({ active, payload }) => {
+                if (!active || !payload) return null;
+                return (
+                  <ChartTooltip
+                    {...payload![0].payload}
+                    incomeCurrency={chartSnapshot.incomeCurrency}
+                    taxColors={taxColors}
+                  />
+                );
               }}
             />
-            <Area
-              type="monotone"
-              dataKey="incomeTaxPercentage"
-              stackId="1"
-              stroke={incomeTaxColor}
-              fill={incomeTaxColor}
-            />
-            <Area
-              type="monotone"
-              dataKey="healthTaxPercentage"
-              stackId="1"
-              stroke={healthTaxColor}
-              fill={healthTaxColor}
-            />
-            <Area
-              type="monotone"
-              dataKey="pensionTaxPercentage"
-              stackId="1"
-              stroke={pensionTaxColor}
-              fill={pensionTaxColor}
-            />
+            {TAXES.map((tax) => (
+              <Area key={tax} type="monotone" dataKey={tax} stackId="1" stroke={taxColors[tax]} fill={taxColors[tax]} />
+            ))}
             <Legend wrapperStyle={{ marginBottom: -70 }} formatter={(v: keyof typeof TAX_NAMES) => TAX_NAMES[v]} />
           </AreaChart>
         )}

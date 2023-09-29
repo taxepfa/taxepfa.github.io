@@ -1,0 +1,21 @@
+.root {
+  display: flex;
+  align-items: center;
+  gap: rem(2px);
+  font-size: var(--mantine-font-size-xl);
+  color: light-dark(var(--mantine-color-gray-8), var(--mantine-color-dark-2));
+}
+
+.text {
+  margin-bottom: rem(-4px);
+}
+
+.dynamicText {
+  display: inline;
+  @media (min-width: $mantine-breakpoint-xs) {
+    display: none;
+  }
+  @media (min-width: rem(680px)) {
+    display: inline;
+  }
+}

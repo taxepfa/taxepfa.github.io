@@ -23,20 +23,21 @@ export default function AboutPage() {
           </a>{' '}
           și un pic de <em>common-sense</em>.
         </Text>
-        <Text size="sm" mb="sm">
+        <Title order={3} size="sm" mt="md" mb="sm">
           De ce?
-        </Text>
+        </Title>
         <Text size="sm" mb="sm">
           Pentru că după ce ciolacii au mărit birurile, în presa românească au apărut tot felul de articole în care
-          diverși autointitulați experți în fiscalitate au declarat că activitatea desfășurată PFA nu mai este rentabilă
-          și că ar trebui să-ți înfiiințezi o firmă.
+          diverși autointitulați experți în fiscalitate au declarat că activitatea desfășurată PFA nu este rentabilă și
+          că ar trebui să-ți înființezi o firmă.
         </Text>
         <Text size="sm" mb="sm">
           Ceea ce este fals.
         </Text>
         <Text size="sm" mb="sm">
           Nu uita că o parte din acești experți sunt contabili care au un interes direct în a-ți vinde servicii de
-          contabilitate, sau pur și simplu scriu pentru <em>click-bait</em>.
+          contabilitate, nu privesc <em>the big picture</em> din punctul <strong>tău</strong> de vedere, sau pur și
+          simplu scriu pentru <em>click-bait</em>.
         </Text>
         <Text size="sm" mb="sm">
           Dacă îți vei înființa o firmă, vei avea un <em>overhead</em> administrativ mai mare și va trebui să
@@ -57,7 +58,7 @@ export default function AboutPage() {
           cheltuială sau bătaie de cap.
         </Text>
         <Text size="sm" mb="sm">
-          Nu mă declar expert, însă nu vorbesc din c_r, ci din experiență. De-a lungul anilor am lucrat ca angajat, ca
+          Nu mă declar expert, însă nu vorbesc din (‿|‿), ci din experiență. De-a lungul anilor am lucrat ca angajat, ca
           PFA, și pentru o perioadă de timp am deținut o firmă.
         </Text>
         <Text size="sm" mb="sm">

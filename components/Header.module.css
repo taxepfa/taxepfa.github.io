@@ -16,11 +16,6 @@
   height: 100%;
 }
 
-.title {
-  font-size: var(--mantine-font-size-xl);
-  color: light-dark(var(--mantine-color-gray-8), var(--mantine-color-dark-2));
-}
-
 .links {
   position: fixed;
   bottom: 0;
@@ -38,6 +33,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-width: rem(40px);
+  min-height: rem(40px);
+  gap: rem(4px);
   text-decoration: none;
   color: light-dark(var(--mantine-color-gray-8), var(--mantine-color-dark-2));
   transition: color 0.2s ease;
@@ -82,7 +80,6 @@
 
   .link {
     flex-direction: row;
-    gap: rem(2px);
   }
 
   .linkText {

@@ -6,7 +6,7 @@ import { CommonInputGridCols } from '~/components/CommonInputGridCols';
 import { ExchangeRatesNotice } from '~/components/ExchageRatesNotice';
 import { Page } from '~/components/Page';
 import { Select } from '~/components/Select';
-import { BASE_CURRENCY, CURRENCIES, INCOME_INTERVALS, IncomeInterval, YEAR } from '~/lib/config';
+import { BASE_CURRENCY, CURRENCIES, INCOME_INTERVALS, IncomeInterval, NEXT_YEAR, YEAR } from '~/lib/config';
 import { safeFormatAsBaseCurrency, safeFormatAsPercentage } from '~/lib/format';
 import { store } from '~/lib/store';
 import { useTaxesCalculator } from '~/lib/taxes';
@@ -68,7 +68,7 @@ export default function HomePage() {
         <LoadingOverlay visible={exchangeRatesLoading} zIndex={1000} overlayProps={{ radius: 'sm', blur: 2 }} />
         <div className={classes.resultTexts}>
           <Text className={classes.resultText} fz={22}>
-            Vei plăti ciolacilor în {YEAR + 1}
+            Vei plăti ciolacilor în {NEXT_YEAR}
           </Text>
           <div>
             <Text fz="xs" c="dimmed">

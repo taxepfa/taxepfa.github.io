@@ -20,6 +20,7 @@ export function NavLink({ className, textClassName, href, icon, text }: NavLinkP
       <Box
         component="a"
         className={clsx(
+          classes.root,
           {
             [classes.current]: href === usePathname(),
           },

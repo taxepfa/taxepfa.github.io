@@ -4,12 +4,13 @@ import cx from 'clsx';
 import { ColorSchemeToggle } from './ColorSchemeToggle';
 import classes from './Header.module.css';
 import { NavLink } from './NavLink';
+import { Title } from './Title';
 
 export function Header() {
   return (
     <header className={classes.root}>
       <Container size="sm" className={classes.container}>
-        <h1 className={classes.title}>Taxe PFA în 2024</h1>
+        <Title />
         <nav className={classes.links}>
           <NavLink
             className={classes.link}
