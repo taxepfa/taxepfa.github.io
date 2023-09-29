@@ -27,14 +27,7 @@ export function computeTaxes({
   unpaidTime = unpaidTime || 0;
   deductibleExpenses = deductibleExpenses || 0;
 
-  if (
-    !exchangeRates ||
-    income === null ||
-    minimumWage === null ||
-    workingDaysPerMonth === null ||
-    workingDaysPerWeek === null ||
-    workingHoursPerDay === null
-  ) {
+  if (!exchangeRates || income === null) {
     return;
   }
 
@@ -166,14 +159,7 @@ export function useTaxesChart({
     incomeTaxPercentage: number;
   }[] = [];
 
-  if (
-    !exchangeRates ||
-    incomeFrom === null ||
-    incomeTo === null ||
-    settingsSnapshot.minimumWage === null ||
-    settingsSnapshot.workingDaysPerMonth === null ||
-    settingsSnapshot.workingHoursPerDay === null
-  ) {
+  if (!exchangeRates || incomeFrom === null || incomeTo === null) {
     return {
       data,
       exchangeRates,
