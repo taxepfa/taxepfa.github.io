@@ -7,7 +7,7 @@ import { ExchangeRatesNotice } from '~/components/ExchageRatesNotice';
 import { Page } from '~/components/Page';
 import { Select } from '~/components/Select';
 import { BASE_CURRENCY, CURRENCIES, INCOME_INTERVALS, IncomeInterval, NEXT_YEAR, YEAR } from '~/lib/config';
-import { safeFormatAsBaseCurrency, safeFormatAsPercentage } from '~/lib/format';
+import { formatAsBaseCurrency, formatAsPercentage } from '~/lib/format';
 import { store } from '~/lib/store';
 import { useTaxesCalculator } from '~/lib/taxes';
 import classes from './page.module.css';
@@ -27,8 +27,14 @@ export default function HomePage() {
     exchangeRates,
     exchangeRatesLoading,
   } = useTaxesCalculator({ calculatorSnapshot, commonSnapshot, settingsSnapshot });
-  const totalTaxPercentageOver100 = totalTaxPercentage > 100;
-  const color = totalTaxPercentage > 100 ? 'red' : totalTaxPercentage > 50 ? 'orange' : 'blue';
+  const totalTaxPercentageOver100 = totalTaxPercentage && totalTaxPercentage > 100;
+  const color = totalTaxPercentage
+    ? totalTaxPercentage > 100
+      ? 'red'
+      : totalTaxPercentage > 50
+      ? 'orange'
+      : 'blue'
+    : 'blue';
 
   return (
     <Page>
@@ -40,9 +46,9 @@ export default function HomePage() {
               required
               min={0}
               label="Venit estimat"
-              value={calculatorSnapshot.income}
-              onChange={(val) => (store.calculator.income = typeof val === 'number' ? val : NaN)}
-              error={isNaN(calculatorSnapshot.income) ? 'Scrie o valoare' : null}
+              value={calculatorSnapshot.income || ''}
+              onChange={(val) => (store.calculator.income = typeof val === 'number' ? val : null)}
+              error={calculatorSnapshot.income == null ? 'Scrie o valoare' : null}
             />
           </GridCol>
           <GridCol span={{ base: 6, xs: 3 }}>
@@ -75,7 +81,7 @@ export default function HomePage() {
               În total
             </Text>
             <Text className={classes.resultText} c={color} fz={36}>
-              {safeFormatAsBaseCurrency(totalTaxAmount)}
+              {formatAsBaseCurrency(totalTaxAmount)}
             </Text>
           </div>
           <Group>
@@ -83,19 +89,19 @@ export default function HomePage() {
               <Text size="xs" c="dimmed" mb={4}>
                 CAS (pensie)
               </Text>
-              <Text className={classes.resultText}>{safeFormatAsBaseCurrency(pensionTaxAmount)}</Text>
+              <Text className={classes.resultText}>{formatAsBaseCurrency(pensionTaxAmount)}</Text>
             </div>
             <div>
               <Text size="xs" c="dimmed" mb={4}>
                 CASS (sănătate)
               </Text>
-              <Text className={classes.resultText}>{safeFormatAsBaseCurrency(healthTaxAmount)}</Text>
+              <Text className={classes.resultText}>{formatAsBaseCurrency(healthTaxAmount)}</Text>
             </div>
             <div>
               <Text size="xs" c="dimmed" mb={4}>
                 Impozit pe venit
               </Text>
-              <Text className={classes.resultText}>{safeFormatAsBaseCurrency(incomeTaxAmount)}</Text>
+              <Text className={classes.resultText}>{formatAsBaseCurrency(incomeTaxAmount)}</Text>
             </div>
           </Group>
         </div>
@@ -104,7 +110,7 @@ export default function HomePage() {
             roundCaps
             thickness={8}
             size={200}
-            sections={[{ value: totalTaxPercentage, color }]}
+            sections={[{ value: totalTaxPercentage || 0, color }]}
             label={
               <div>
                 <Text ta="center" fz="xs" mt={-16} c="dimmed">
@@ -119,7 +125,7 @@ export default function HomePage() {
                   )}
                 </Text>
                 <Text ta="center" c={color} fz={48} className={classes.resultText}>
-                  {safeFormatAsPercentage(totalTaxPercentageOver100 ? 100 : totalTaxPercentage)}
+                  {formatAsPercentage(totalTaxPercentageOver100 ? 100 : totalTaxPercentage)}
                 </Text>
                 <Text ta="center" fz="xs" mt={2} c="dimmed">
                   din venitul tău
@@ -130,10 +136,10 @@ export default function HomePage() {
         </div>
       </Card>
       <div>
-        {!isNaN(totalIncome) &&
+        {totalIncome !== undefined &&
           (calculatorSnapshot.incomeCurrency !== BASE_CURRENCY || calculatorSnapshot.incomeInterval !== 'yearly') && (
             <Text size="xs" c="dimmed" ta="center">
-              Venitul tău brut estimat pentru anul {YEAR} este de {safeFormatAsBaseCurrency(totalIncome)}.
+              Venitul tău brut estimat pentru anul {YEAR} este de {formatAsBaseCurrency(totalIncome)}.
             </Text>
           )}
         <ExchangeRatesNotice

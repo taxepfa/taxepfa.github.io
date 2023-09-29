@@ -1,30 +1,42 @@
-import { proxy } from 'valtio';
+import { proxy, subscribe } from 'valtio';
 import { DeductibleExpensesInterval, IncomeInterval } from './config';
 
-export const store = proxy<{
+function proxyWithLocalStorage<T extends object>(key: string, initialValue: T) {
+  if (typeof window === 'undefined') return proxy(initialValue);
+
+  const storageItem = localStorage.getItem(key);
+  const state = proxy(storageItem !== null ? (JSON.parse(storageItem) as T) : initialValue);
+  subscribe(state, () => localStorage.setItem(key, JSON.stringify(state)));
+
+  return state;
+}
+
+export type State = {
   calculator: {
-    income: number;
+    income: number | null;
     incomeCurrency: string;
     incomeInterval: IncomeInterval;
   };
   chart: {
-    incomeFrom: number;
-    incomeTo: number;
+    incomeFrom: number | null;
+    incomeTo: number | null;
     incomeCurrency: string;
     incomeInterval: IncomeInterval;
   };
   common: {
-    deductibleExpenses: number;
+    deductibleExpenses: number | null;
     deductibleExpensesCurrency: string;
     deductibleExpensesInterval: DeductibleExpensesInterval;
-    unpaidVacationDays: number;
+    unpaidVacationDays: number | null;
   };
   settings: {
-    minimumWage: number;
-    workingDaysPerMonth: number;
-    workingHoursPerDay: number;
+    minimumWage: number | null;
+    workingDaysPerMonth: number | null;
+    workingHoursPerDay: number | null;
   };
-}>({
+};
+
+export const store = proxyWithLocalStorage<State>('state', {
   calculator: {
     income: 3000,
     incomeCurrency: 'EUR',
@@ -37,14 +49,14 @@ export const store = proxy<{
     incomeInterval: 'monthly',
   },
   common: {
-    deductibleExpenses: NaN,
+    deductibleExpenses: null,
     deductibleExpensesCurrency: 'EUR',
     deductibleExpensesInterval: 'monthly',
-    unpaidVacationDays: NaN,
+    unpaidVacationDays: null,
   },
   settings: {
     minimumWage: 3300,
-    workingDaysPerMonth: 20,
+    workingDaysPerMonth: 21,
     workingHoursPerDay: 8,
   },
 });
