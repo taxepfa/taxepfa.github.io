@@ -1,21 +1,22 @@
 'use client';
 
-import { Card, Grid, GridCol, Group, LoadingOverlay, NumberInput, RingProgress, Text } from '@mantine/core';
+import { Card, Grid, GridCol, Group, LoadingOverlay, NumberInput, RingProgress, Stack, Text } from '@mantine/core';
 import { useSnapshot } from 'valtio';
 import { CommonInputGridCols } from '~/components/CommonInputGridCols';
 import { ExchangeRatesNotice } from '~/components/ExchageRatesNotice';
 import { Page } from '~/components/Page';
 import { Select } from '~/components/Select';
+import { SettingsNotice } from '~/components/SettingsNotice';
 import { BASE_CURRENCY, CURRENCIES, INCOME_INTERVALS, IncomeInterval, NEXT_YEAR, YEAR } from '~/lib/config';
 import { formatAsBaseCurrency, formatAsPercentage } from '~/lib/format';
-import { store } from '~/lib/store';
+import { state } from '~/lib/state';
 import { useTaxesCalculator } from '~/lib/taxes';
 import classes from './page.module.css';
 
 export default function HomePage() {
-  const calculatorSnapshot = useSnapshot(store.calculator);
-  const commonSnapshot = useSnapshot(store.common);
-  const settingsSnapshot = useSnapshot(store.settings);
+  const calculatorSnapshot = useSnapshot(state.calculator);
+  const commonSnapshot = useSnapshot(state.common);
+  const settingsSnapshot = useSnapshot(state.settings);
 
   const {
     totalIncome,
@@ -39,7 +40,7 @@ export default function HomePage() {
   return (
     <Page>
       <Card p="md" withBorder radius="md">
-        <Grid gutter="md">
+        <Grid gutter="md" pb="xs">
           <GridCol span={{ xs: 6 }}>
             <NumberInput
               hideControls
@@ -47,7 +48,7 @@ export default function HomePage() {
               min={0}
               label="Venit estimat"
               value={calculatorSnapshot.income || ''}
-              onChange={(val) => (store.calculator.income = typeof val === 'number' ? val : null)}
+              onChange={(val) => (state.calculator.income = typeof val === 'number' ? val : null)}
               error={calculatorSnapshot.income == null ? 'Scrie o valoare' : null}
             />
           </GridCol>
@@ -56,7 +57,7 @@ export default function HomePage() {
               ariaLabel="Moneda venitului"
               data={CURRENCIES}
               value={calculatorSnapshot.incomeCurrency}
-              onChange={(val: string) => (store.calculator.incomeCurrency = val)}
+              onChange={(val: string) => (state.calculator.incomeCurrency = val)}
             />
           </GridCol>
           <GridCol span={{ base: 6, xs: 3 }}>
@@ -64,7 +65,7 @@ export default function HomePage() {
               ariaLabel="Intervalul pe care este estimat venitul"
               data={INCOME_INTERVALS}
               value={calculatorSnapshot.incomeInterval}
-              onChange={(val: string) => (store.calculator.incomeInterval = val as IncomeInterval)}
+              onChange={(val: string) => (state.calculator.incomeInterval = val as IncomeInterval)}
             />
           </GridCol>
           <CommonInputGridCols />
@@ -135,19 +136,20 @@ export default function HomePage() {
           />
         </div>
       </Card>
-      <div>
+      <Stack gap="xs">
         {totalIncome !== undefined &&
           (calculatorSnapshot.incomeCurrency !== BASE_CURRENCY || calculatorSnapshot.incomeInterval !== 'yearly') && (
             <Text size="xs" c="dimmed" ta="center">
               Venitul tău brut estimat pentru anul {YEAR} este de {formatAsBaseCurrency(totalIncome)}.
             </Text>
           )}
+        <SettingsNotice />
         <ExchangeRatesNotice
           exchangeRates={exchangeRates}
           incomeCurrency={calculatorSnapshot.incomeCurrency}
           deductibleExpensesCurrency={commonSnapshot.deductibleExpensesCurrency}
         />
-      </div>
+      </Stack>
     </Page>
   );
 }

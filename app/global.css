@@ -2,3 +2,12 @@
   outline: var(--mantine-color-blue-6) dashed 1px;
   outline-offset: 2px;
 }
+
+a {
+  text-decoration: none;
+  color: var(--mantine-color-blue-7);
+  &:hover {
+    color: var(--mantine-color-blue-5);
+    text-decoration: underline;
+  }
+}

@@ -1,16 +1,22 @@
 import { BASE_CURRENCY, HEALTH_PERCENTAGE, PENSION_PERCENTAGE } from './config';
 import { ExchangeRates, useExchangeRates } from './exchangeRates';
-import { store } from './store';
+import { state } from './state';
 
-type CalculatorSnapshot = (typeof store)['calculator'];
-type ChartSnapshot = (typeof store)['chart'];
-type CommonSnapshot = (typeof store)['common'];
-type SettingsSnapshot = (typeof store)['settings'];
+type CalculatorSnapshot = (typeof state)['calculator'];
+type ChartSnapshot = (typeof state)['chart'];
+type CommonSnapshot = (typeof state)['common'];
+type SettingsSnapshot = (typeof state)['settings'];
 
 export function computeTaxes({
   calculatorSnapshot: { income, incomeCurrency, incomeInterval },
-  commonSnapshot: { deductibleExpenses, deductibleExpensesCurrency, deductibleExpensesInterval, unpaidVacationDays },
-  settingsSnapshot: { minimumWage, workingDaysPerMonth, workingHoursPerDay },
+  commonSnapshot: {
+    deductibleExpenses,
+    deductibleExpensesCurrency,
+    deductibleExpensesInterval,
+    unpaidTime,
+    unpaidInterval,
+  },
+  settingsSnapshot: { minimumWage, workingDaysPerMonth, workingDaysPerWeek, workingHoursPerDay },
   exchangeRates,
 }: {
   calculatorSnapshot: CalculatorSnapshot;
@@ -18,7 +24,7 @@ export function computeTaxes({
   settingsSnapshot: SettingsSnapshot;
   exchangeRates: ExchangeRates | undefined;
 }) {
-  unpaidVacationDays = Math.min(unpaidVacationDays || 0, (workingDaysPerMonth || 0) * 12);
+  unpaidTime = unpaidTime || 0;
   deductibleExpenses = deductibleExpenses || 0;
 
   if (
@@ -26,6 +32,7 @@ export function computeTaxes({
     income === null ||
     minimumWage === null ||
     workingDaysPerMonth === null ||
+    workingDaysPerWeek === null ||
     workingHoursPerDay === null
   ) {
     return;
@@ -33,11 +40,47 @@ export function computeTaxes({
 
   let totalIncome = income;
   if (incomeInterval === 'hourly') {
-    totalIncome *= workingDaysPerMonth * workingHoursPerDay * 12 - unpaidVacationDays * workingHoursPerDay;
+    let unpaidHours = 0;
+    switch (unpaidInterval) {
+      case 'days':
+        unpaidHours = unpaidTime * workingHoursPerDay;
+        break;
+      case 'weeks':
+        unpaidHours = unpaidTime * workingDaysPerWeek * workingHoursPerDay;
+        break;
+      case 'months':
+        unpaidHours = unpaidTime * workingDaysPerMonth * workingHoursPerDay;
+        break;
+    }
+    totalIncome *= workingDaysPerMonth * workingHoursPerDay * 12 - unpaidHours;
   } else if (incomeInterval === 'daily') {
-    totalIncome *= workingDaysPerMonth * 12 - unpaidVacationDays;
+    let unpaidDays = 0;
+    switch (unpaidInterval) {
+      case 'days':
+        unpaidDays = unpaidTime;
+        break;
+      case 'weeks':
+        unpaidDays = unpaidTime * workingDaysPerWeek;
+        break;
+      case 'months':
+        unpaidDays = unpaidTime * workingDaysPerMonth;
+        break;
+    }
+    totalIncome *= workingDaysPerMonth * 12 - unpaidDays;
   } else if (incomeInterval === 'monthly') {
-    totalIncome *= 12 - unpaidVacationDays / workingDaysPerMonth;
+    let unpaidMonths = 0;
+    switch (unpaidInterval) {
+      case 'days':
+        unpaidMonths = unpaidTime / workingDaysPerMonth;
+        break;
+      case 'weeks':
+        unpaidMonths = unpaidTime / (workingDaysPerWeek * workingDaysPerMonth);
+        break;
+      case 'months':
+        unpaidMonths = unpaidTime;
+        break;
+    }
+    totalIncome *= 12 - unpaidMonths;
   }
 
   if (incomeCurrency !== BASE_CURRENCY) {

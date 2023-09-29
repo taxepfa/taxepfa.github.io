@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, Grid, GridCol, LoadingOverlay, NumberInput, useMantineTheme } from '@mantine/core';
+import { Card, Grid, GridCol, LoadingOverlay, NumberInput, Stack, useMantineTheme } from '@mantine/core';
 import { useElementSize } from '@mantine/hooks';
 import { Area, AreaChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis } from 'recharts';
 import { useSnapshot } from 'valtio';
@@ -9,15 +9,16 @@ import { CommonInputGridCols } from '~/components/CommonInputGridCols';
 import { ExchangeRatesNotice } from '~/components/ExchageRatesNotice';
 import { Page } from '~/components/Page';
 import { Select } from '~/components/Select';
+import { SettingsNotice } from '~/components/SettingsNotice';
 import { CURRENCIES, INCOME_INTERVALS, IncomeInterval, TAXES, TAX_NAMES } from '~/lib/config';
 import { formatAsInteger } from '~/lib/format';
-import { store } from '~/lib/store';
+import { state } from '~/lib/state';
 import { useTaxesChart } from '~/lib/taxes';
 
 export default function ChartPage() {
-  const chartSnapshot = useSnapshot(store.chart);
-  const commonSnapshot = useSnapshot(store.common);
-  const settingsSnapshot = useSnapshot(store.settings);
+  const chartSnapshot = useSnapshot(state.chart);
+  const commonSnapshot = useSnapshot(state.common);
+  const settingsSnapshot = useSnapshot(state.settings);
   const { data, exchangeRates, exchangeRatesLoading } = useTaxesChart({
     chartSnapshot,
     commonSnapshot,
@@ -36,7 +37,7 @@ export default function ChartPage() {
   return (
     <Page>
       <Card p="md" withBorder radius="md">
-        <Grid gutter="md">
+        <Grid gutter="md" pb="xs">
           <GridCol span={{ base: 6, xs: 3 }}>
             <NumberInput
               hideControls
@@ -44,7 +45,7 @@ export default function ChartPage() {
               min={0}
               label="Venit de la"
               value={chartSnapshot.incomeFrom || ''}
-              onChange={(val) => (store.chart.incomeFrom = typeof val === 'number' ? val : NaN)}
+              onChange={(val) => (state.chart.incomeFrom = typeof val === 'number' ? val : NaN)}
               error={chartSnapshot.incomeFrom == null ? 'Scrie o valoare' : null}
             />
           </GridCol>
@@ -55,7 +56,7 @@ export default function ChartPage() {
               min={chartSnapshot.incomeFrom || 0}
               label="Până la"
               value={chartSnapshot.incomeTo || ''}
-              onChange={(val) => (store.chart.incomeTo = typeof val === 'number' ? val : NaN)}
+              onChange={(val) => (state.chart.incomeTo = typeof val === 'number' ? val : NaN)}
               error={chartSnapshot.incomeTo == null ? 'Scrie o valoare' : null}
             />
           </GridCol>
@@ -64,7 +65,7 @@ export default function ChartPage() {
               ariaLabel="Moneda venitului"
               data={CURRENCIES}
               value={chartSnapshot.incomeCurrency}
-              onChange={(val: string) => (store.chart.incomeCurrency = val)}
+              onChange={(val: string) => (state.chart.incomeCurrency = val)}
             />
           </GridCol>
           <GridCol span={{ base: 6, xs: 3 }}>
@@ -72,7 +73,7 @@ export default function ChartPage() {
               ariaLabel="Intervalul pe care este estimat venitul"
               data={INCOME_INTERVALS}
               value={chartSnapshot.incomeInterval}
-              onChange={(val: string) => (store.chart.incomeInterval = val as IncomeInterval)}
+              onChange={(val: string) => (state.chart.incomeInterval = val as IncomeInterval)}
             />
           </GridCol>
           <CommonInputGridCols />
@@ -123,11 +124,14 @@ export default function ChartPage() {
           </AreaChart>
         )}
       </Card>
-      <ExchangeRatesNotice
-        exchangeRates={exchangeRates}
-        incomeCurrency={chartSnapshot.incomeCurrency}
-        deductibleExpensesCurrency={commonSnapshot.deductibleExpensesCurrency}
-      />
+      <Stack gap="xs">
+        <SettingsNotice />
+        <ExchangeRatesNotice
+          exchangeRates={exchangeRates}
+          incomeCurrency={chartSnapshot.incomeCurrency}
+          deductibleExpensesCurrency={commonSnapshot.deductibleExpensesCurrency}
+        />
+      </Stack>
     </Page>
   );
 }

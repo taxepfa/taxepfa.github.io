@@ -11,6 +11,7 @@ export const EXCHANGE_RATES_RELOAD_INTERVAL = 3_600_000;
 
 export type IncomeInterval = 'hourly' | 'daily' | 'monthly' | 'yearly';
 export type DeductibleExpensesInterval = 'monthly' | 'yearly';
+export type UnpaidInterval = 'days' | 'weeks' | 'months';
 
 export const INCOME_INTERVALS: {
   value: IncomeInterval;
@@ -19,7 +20,16 @@ export const INCOME_INTERVALS: {
   { value: 'hourly', label: 'pe oră' },
   { value: 'daily', label: 'pe zi' },
   { value: 'monthly', label: 'pe lună' },
-  { value: 'yearly', label: 'pe an' },
+  { value: 'yearly', label: 'pe tot anul' },
+];
+
+export const UNPAID_INTERVALS: {
+  value: UnpaidInterval;
+  label: string;
+}[] = [
+  { value: 'days', label: 'zile' },
+  { value: 'weeks', label: 'săptămâni' },
+  { value: 'months', label: 'luni' },
 ];
 
 export const DEDUCTIBLE_EXPENSES_INTERVALS = INCOME_INTERVALS.filter(
@@ -50,3 +60,5 @@ export const TAX_NAMES = {
   pensionTaxPercentage: 'CAS',
   incomeTaxPercentage: 'Imp. pe venit',
 } as const;
+
+export const LOCAL_STORAGE_STATE_KEY = 'state';

@@ -1,6 +1,10 @@
 .root {
   position: relative;
 
+  &:hover {
+    text-decoration: none;
+  }
+
   &::after {
     content: '';
     position: absolute;

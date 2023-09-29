@@ -6,6 +6,7 @@ import { ColorSchemeScript, Container, MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import { Footer } from '~/components/Footer';
 import { Header } from '~/components/Header';
+import { StateLoader } from '~/components/StateLoader';
 import { NEXT_YEAR, YEAR } from '~/lib/config';
 import { theme } from '~/theme';
 import classes from './layout.module.css';
@@ -25,6 +26,7 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no" />
       </head>
       <body className={classes.body}>
+        <StateLoader />
         <MantineProvider theme={theme}>
           <Notifications position="top-center" />
           <Header />
