@@ -1,26 +1,7 @@
-.root {
-  position: relative;
-
-  &::after {
-    content: '';
-    position: absolute;
-    height: rem(4px);
-    left: rem(2px);
-    width: calc(100% - rem(2px));
-    background: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
-    top: rem(-8px);
-    transform: scaleY(0);
-    transform-origin: top;
-    transition: all 0.2s ease;
-
-    @media (min-width: $mantine-breakpoint-xs) {
-      transform-origin: bottom;
-      top: auto;
-      bottom: rem(-8px);
-    }
+.current {
+  &,
+  &:focus,
+  &:not(:hover) {
+    color: light-dark(var(--mantine-color-blue-8), var(--mantine-color-blue-4));
   }
-}
-
-.current::after {
-  transform: scaleY(1);
 }
