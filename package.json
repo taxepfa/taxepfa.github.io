@@ -1,6 +1,6 @@
 {
   "name": "taxepfa.github.io",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "A simple application to compute freelance taxes in Romania",
   "private": true,
   "scripts": {
@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "devDependencies": {
+    "@ducanh2912/next-pwa": "^9.7.1",
     "@mantine/core": "7.1.0",
     "@mantine/hooks": "7.1.0",
     "@mantine/notifications": "^7.1.0",
@@ -29,6 +30,7 @@
     "recharts": "^2.8.0",
     "swr": "^2.2.4",
     "typescript": "5.2.2",
-    "valtio": "^1.11.2"
+    "valtio": "^1.11.2",
+    "webpack": "^5.88.2"
   }
 }
