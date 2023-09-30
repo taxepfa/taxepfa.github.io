@@ -10,6 +10,6 @@ body {
 a {
   color: light-dark(var(--mantine-color-blue-8), var(--mantine-color-blue-3));
   &:hover {
-    color: light-dark(var(--mantine-color-blue-6), var(--mantine-color-blue-1));
+    color: light-dark(var(--mantine-color-blue-6), var(--mantine-color-blue-5));
   }
 }
