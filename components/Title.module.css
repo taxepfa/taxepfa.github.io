@@ -1,13 +1,16 @@
 .root {
-  display: flex;
-  align-items: center;
-  gap: rem(2px);
-  font-size: var(--mantine-font-size-xl);
+  gap: rem(8px);
   color: light-dark(var(--mantine-color-gray-8), var(--mantine-color-dark-2));
 }
 
+.logo {
+  margin-top: rem(-6px);
+}
+
 .text {
-  margin-bottom: rem(-4px);
+  margin-top: rem(3px);
+  font-size: var(--mantine-font-size-xl);
+  line-height: 1;
 }
 
 .dynamicText {

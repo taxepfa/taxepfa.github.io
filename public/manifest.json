@@ -1,0 +1,15 @@
+{
+  "name": "Taxe PFA",
+  "short_name": "Taxe PFA",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any"
+    }
+  ],
+  "theme_color": "#25262b",
+  "background_color": "#25262b",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait"
+}

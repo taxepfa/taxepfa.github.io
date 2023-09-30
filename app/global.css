@@ -3,6 +3,10 @@
   outline-offset: 2px;
 }
 
+body {
+  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8));
+}
+
 a {
   text-decoration: none;
   color: var(--mantine-color-blue-7);
