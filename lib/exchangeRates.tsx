@@ -4,7 +4,7 @@ import useSWR from 'swr';
 import { BASE_CURRENCY, CURRENCIES, EXCHANGE_RATES_RELOAD_INTERVAL } from './config';
 import classes from './exchangeRates.module.css';
 
-const BASE_CURRRENCY_LOWER_CASE = BASE_CURRENCY.toLowerCase();
+const BASE_CURRENCY_LOWER_CASE = BASE_CURRENCY.toLowerCase();
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -12,7 +12,7 @@ export type ExchangeRates = Record<string, number>;
 
 export function useExchangeRates() {
   const { data, isLoading } = useSWR(
-    `https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/${BASE_CURRRENCY_LOWER_CASE.toLowerCase()}.min.json`,
+    `https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/${BASE_CURRENCY_LOWER_CASE.toLowerCase()}.min.json`,
     fetcher,
     {
       refreshInterval: EXCHANGE_RATES_RELOAD_INTERVAL,
@@ -33,12 +33,12 @@ export function useExchangeRates() {
 
   let exchangeRates: ExchangeRates | undefined;
 
-  if (data?.[BASE_CURRRENCY_LOWER_CASE]) {
+  if (data?.[BASE_CURRENCY_LOWER_CASE]) {
     exchangeRates = {};
-    for (const lowerCaseCurrency of Object.keys(data[BASE_CURRRENCY_LOWER_CASE])) {
+    for (const lowerCaseCurrency of Object.keys(data[BASE_CURRENCY_LOWER_CASE])) {
       const currency = lowerCaseCurrency.toUpperCase();
       if (currency !== BASE_CURRENCY && CURRENCIES.includes(currency)) {
-        exchangeRates[currency] = 1 / data[BASE_CURRRENCY_LOWER_CASE][lowerCaseCurrency];
+        exchangeRates[currency] = 1 / data[BASE_CURRENCY_LOWER_CASE][lowerCaseCurrency];
       }
     }
   }
