@@ -8,10 +8,8 @@ body {
 }
 
 a {
-  text-decoration: none;
-  color: var(--mantine-color-blue-7);
+  color: light-dark(var(--mantine-color-blue-8), var(--mantine-color-blue-3));
   &:hover {
-    color: var(--mantine-color-blue-5);
-    text-decoration: underline;
+    color: light-dark(var(--mantine-color-blue-6), var(--mantine-color-blue-1));
   }
 }
