@@ -19,13 +19,9 @@ export function NavLink({ className, textClassName, href, icon, text }: NavLinkP
     <Link href={href} passHref legacyBehavior>
       <Box
         component="a"
-        className={clsx(
-          classes.root,
-          {
-            [classes.current]: href === usePathname(),
-          },
-          className
-        )}
+        className={clsx(className, {
+          [classes.current]: href === usePathname(),
+        })}
       >
         {icon}
         <div className={textClassName}>{text}</div>

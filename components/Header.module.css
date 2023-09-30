@@ -45,7 +45,8 @@
 
   @media (pointer: fine) {
     &:hover {
-      color: var(--mantine-color-blue-light-color);
+      color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
+      text-decoration: underline;
     }
   }
 }
