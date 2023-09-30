@@ -58,5 +58,5 @@ export const initialState: State = {
 export const state = proxy<State>(initialState);
 
 subscribe(state, () => {
-  localStorage.setItem(LOCAL_STORAGE_STATE_KEY, JSON.stringify(state));
+  localStorage.setItem(LOCAL_STORAGE_STATE_KEY, JSON.stringify({ ...state, appVersion: process.env.APP_VERSION }));
 });

@@ -9,7 +9,13 @@ export function StateLoader() {
     try {
       const serializedState = localStorage.getItem(LOCAL_STORAGE_STATE_KEY);
       if (serializedState) {
-        const newState = JSON.parse(serializedState) as State;
+        const newState = JSON.parse(serializedState) as State & { appVersion: string };
+
+        if (newState.appVersion !== process.env.APP_VERSION) {
+          localStorage.removeItem(LOCAL_STORAGE_STATE_KEY);
+          return;
+        }
+
         state.calculator.income = newState.calculator.income || initialState.calculator.income;
         state.calculator.incomeCurrency = newState.calculator.incomeCurrency || initialState.calculator.incomeCurrency;
         state.calculator.incomeInterval = newState.calculator.incomeInterval || initialState.calculator.incomeInterval;
