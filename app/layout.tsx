@@ -27,7 +27,7 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
         <meta name="application-name" content="Taxe PFA" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#25262b" />
-        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no" />
+        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
       </head>
       <body>
         <StateLoader />

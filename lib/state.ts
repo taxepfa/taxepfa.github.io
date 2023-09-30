@@ -1,5 +1,5 @@
 import { proxy, subscribe } from 'valtio';
-import { DeductibleExpensesInterval, IncomeInterval, LOCAL_STORAGE_STATE_KEY, UnpaidInterval } from './config';
+import { DeductibleExpensesInterval, IncomeInterval, LOCAL_STORAGE_STATE_KEY, UnpaidTimeUnits } from './config';
 
 export type State = {
   calculator: {
@@ -18,7 +18,7 @@ export type State = {
     deductibleExpensesCurrency: string;
     deductibleExpensesInterval: DeductibleExpensesInterval;
     unpaidTime: number | null;
-    unpaidInterval: UnpaidInterval;
+    unpaidTimeUnits: UnpaidTimeUnits;
   };
   settings: {
     minimumWage: number;
@@ -30,22 +30,22 @@ export type State = {
 
 export const initialState: State = {
   calculator: {
-    income: 3000,
-    incomeCurrency: 'EUR',
+    income: 12000,
+    incomeCurrency: 'RON',
     incomeInterval: 'monthly',
   },
   chart: {
     incomeFrom: 0,
-    incomeTo: 6000,
-    incomeCurrency: 'EUR',
+    incomeTo: 12000,
+    incomeCurrency: 'RON',
     incomeInterval: 'monthly',
   },
   common: {
     deductibleExpenses: null,
-    deductibleExpensesCurrency: 'EUR',
+    deductibleExpensesCurrency: 'RON',
     deductibleExpensesInterval: 'monthly',
     unpaidTime: null,
-    unpaidInterval: 'weeks',
+    unpaidTimeUnits: 'weeks',
   },
   settings: {
     minimumWage: 3300,
@@ -58,5 +58,5 @@ export const initialState: State = {
 export const state = proxy<State>(initialState);
 
 subscribe(state, () => {
-  localStorage.setItem(LOCAL_STORAGE_STATE_KEY, JSON.stringify(state));
+  localStorage.setItem(LOCAL_STORAGE_STATE_KEY, JSON.stringify({ ...state, appVersion: process.env.APP_VERSION }));
 });

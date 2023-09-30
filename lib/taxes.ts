@@ -14,7 +14,7 @@ export function computeTaxes({
     deductibleExpensesCurrency,
     deductibleExpensesInterval,
     unpaidTime,
-    unpaidInterval,
+    unpaidTimeUnits,
   },
   settingsSnapshot: { minimumWage, workingDaysPerMonth, workingDaysPerWeek, workingHoursPerDay },
   exchangeRates,
@@ -27,14 +27,17 @@ export function computeTaxes({
   unpaidTime = unpaidTime || 0;
   deductibleExpenses = deductibleExpenses || 0;
 
-  if (!exchangeRates || income === null) {
+  if (
+    income === null ||
+    ((incomeCurrency !== BASE_CURRENCY || deductibleExpensesCurrency !== BASE_CURRENCY) && !exchangeRates)
+  ) {
     return;
   }
 
   let totalIncome = income;
   if (incomeInterval === 'hourly') {
     let unpaidHours = 0;
-    switch (unpaidInterval) {
+    switch (unpaidTimeUnits) {
       case 'days':
         unpaidHours = unpaidTime * workingHoursPerDay;
         break;
@@ -48,7 +51,7 @@ export function computeTaxes({
     totalIncome *= workingDaysPerMonth * workingHoursPerDay * 12 - unpaidHours;
   } else if (incomeInterval === 'daily') {
     let unpaidDays = 0;
-    switch (unpaidInterval) {
+    switch (unpaidTimeUnits) {
       case 'days':
         unpaidDays = unpaidTime;
         break;
@@ -62,7 +65,7 @@ export function computeTaxes({
     totalIncome *= workingDaysPerMonth * 12 - unpaidDays;
   } else if (incomeInterval === 'monthly') {
     let unpaidMonths = 0;
-    switch (unpaidInterval) {
+    switch (unpaidTimeUnits) {
       case 'days':
         unpaidMonths = unpaidTime / workingDaysPerMonth;
         break;
@@ -77,7 +80,7 @@ export function computeTaxes({
   }
 
   if (incomeCurrency !== BASE_CURRENCY) {
-    totalIncome *= exchangeRates[incomeCurrency];
+    totalIncome *= exchangeRates![incomeCurrency];
   }
 
   let pensionTaxAmount = 0;
@@ -104,7 +107,7 @@ export function computeTaxes({
     totalDeductibleExpenses = deductibleExpenses * 12;
   }
   if (deductibleExpensesCurrency !== BASE_CURRENCY) {
-    totalDeductibleExpenses *= exchangeRates[deductibleExpensesCurrency];
+    totalDeductibleExpenses *= exchangeRates![deductibleExpensesCurrency];
   }
 
   const taxableIncome = Math.max(totalIncome - pensionTaxAmount - healthTaxAmount - totalDeductibleExpenses, 0);
