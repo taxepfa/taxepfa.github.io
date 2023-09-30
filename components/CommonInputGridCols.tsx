@@ -4,8 +4,8 @@ import {
   CURRENCIES,
   DEDUCTIBLE_EXPENSES_INTERVALS,
   DeductibleExpensesInterval,
-  UNPAID_INTERVALS,
-  UnpaidInterval,
+  UNPAID_TIME_UNITS,
+  UnpaidTimeUnits,
 } from '~/lib/config';
 import { state } from '~/lib/state';
 import { Select } from './Select';
@@ -52,9 +52,9 @@ export function CommonInputGridCols() {
       <GridCol span={{ xs: 6 }}>
         <Select
           ariaLabel="Unități de măsură ale timpului în care nu vei lucra"
-          data={UNPAID_INTERVALS}
-          value={commonSnapshot.unpaidInterval}
-          onChange={(val: string) => (state.common.unpaidInterval = val as UnpaidInterval)}
+          data={UNPAID_TIME_UNITS}
+          value={commonSnapshot.unpaidTimeUnits}
+          onChange={(val: string) => (state.common.unpaidTimeUnits = val as UnpaidTimeUnits)}
         />
       </GridCol>
     </>

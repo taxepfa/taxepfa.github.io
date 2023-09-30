@@ -11,7 +11,7 @@ export const EXCHANGE_RATES_RELOAD_INTERVAL = 3_600_000;
 
 export type IncomeInterval = 'hourly' | 'daily' | 'monthly' | 'yearly';
 export type DeductibleExpensesInterval = 'monthly' | 'yearly';
-export type UnpaidInterval = 'days' | 'weeks' | 'months';
+export type UnpaidTimeUnits = 'days' | 'weeks' | 'months';
 
 export const INCOME_INTERVALS: {
   value: IncomeInterval;
@@ -23,8 +23,8 @@ export const INCOME_INTERVALS: {
   { value: 'yearly', label: 'pe tot anul' },
 ];
 
-export const UNPAID_INTERVALS: {
-  value: UnpaidInterval;
+export const UNPAID_TIME_UNITS: {
+  value: UnpaidTimeUnits;
   label: string;
 }[] = [
   { value: 'days', label: 'zile' },
