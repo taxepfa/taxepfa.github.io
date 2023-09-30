@@ -5,8 +5,8 @@ import { formatExchangeRate } from '~/lib/format';
 
 export type ExchangeRateNoticeProps = {
   exchangeRates: ExchangeRates | undefined;
-  incomeCurrency: string;
-  deductibleExpensesCurrency: string;
+  incomeCurrency: string | null;
+  deductibleExpensesCurrency: string | null;
 };
 
 export function ExchangeRatesNotice({
@@ -15,13 +15,18 @@ export function ExchangeRatesNotice({
   deductibleExpensesCurrency,
 }: ExchangeRateNoticeProps) {
   const usedExchangeRates = [];
-  if (incomeCurrency !== BASE_CURRENCY && exchangeRates) {
+  if (incomeCurrency && incomeCurrency !== BASE_CURRENCY && exchangeRates) {
     usedExchangeRates.push({
       value: exchangeRates[incomeCurrency],
       currency: incomeCurrency,
     });
   }
-  if (deductibleExpensesCurrency !== BASE_CURRENCY && deductibleExpensesCurrency !== incomeCurrency && exchangeRates) {
+  if (
+    deductibleExpensesCurrency &&
+    deductibleExpensesCurrency !== BASE_CURRENCY &&
+    deductibleExpensesCurrency !== incomeCurrency &&
+    exchangeRates
+  ) {
     usedExchangeRates.push({
       value: exchangeRates[deductibleExpensesCurrency],
       currency: deductibleExpensesCurrency,

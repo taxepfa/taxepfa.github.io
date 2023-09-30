@@ -21,7 +21,7 @@ export function CommonInputGridCols() {
           label="Cheltuieli deductibile"
           min={0}
           value={commonSnapshot.deductibleExpenses || ''}
-          onChange={(val) => (state.common.deductibleExpenses = typeof val === 'number' ? val : null)}
+          onChange={(val) => (state.common.deductibleExpenses = typeof val === 'number' ? val : 0)}
         />
       </GridCol>
       <GridCol span={{ base: 6, xs: 3 }}>
@@ -44,14 +44,16 @@ export function CommonInputGridCols() {
         <NumberInput
           hideControls
           label="Nu vei lucra"
+          description="Timp în care nu vei avea încasări"
           min={0}
           value={commonSnapshot.unpaidTime || ''}
-          onChange={(val) => (state.common.unpaidTime = typeof val === 'number' ? val : null)}
+          onChange={(val) => (state.common.unpaidTime = typeof val === 'number' ? val : 0)}
         />
       </GridCol>
       <GridCol span={{ xs: 6 }}>
         <Select
           ariaLabel="Unități de măsură ale timpului în care nu vei lucra"
+          withDescriptionSpace
           data={UNPAID_TIME_UNITS}
           value={commonSnapshot.unpaidTimeUnits}
           onChange={(val: string) => (state.common.unpaidTimeUnits = val as UnpaidTimeUnits)}

@@ -3,21 +3,21 @@ import { DeductibleExpensesInterval, IncomeInterval, LOCAL_STORAGE_STATE_KEY, Un
 
 export type State = {
   calculator: {
-    income: number | null;
+    income: number;
     incomeCurrency: string;
     incomeInterval: IncomeInterval;
   };
   chart: {
-    incomeFrom: number | null;
-    incomeTo: number | null;
+    incomeFrom: number;
+    incomeTo: number;
     incomeCurrency: string;
     incomeInterval: IncomeInterval;
   };
   common: {
-    deductibleExpenses: number | null;
+    deductibleExpenses: number;
     deductibleExpensesCurrency: string;
     deductibleExpensesInterval: DeductibleExpensesInterval;
-    unpaidTime: number | null;
+    unpaidTime: number;
     unpaidTimeUnits: UnpaidTimeUnits;
   };
   settings: {
@@ -41,10 +41,10 @@ export const initialState: State = {
     incomeInterval: 'monthly',
   },
   common: {
-    deductibleExpenses: null,
+    deductibleExpenses: 0,
     deductibleExpensesCurrency: 'RON',
     deductibleExpensesInterval: 'monthly',
-    unpaidTime: null,
+    unpaidTime: 0,
     unpaidTimeUnits: 'weeks',
   },
   settings: {

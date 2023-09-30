@@ -10,7 +10,7 @@ import { ExchangeRatesNotice } from '~/components/ExchageRatesNotice';
 import { Page } from '~/components/Page';
 import { Select } from '~/components/Select';
 import { SettingsNotice } from '~/components/SettingsNotice';
-import { CURRENCIES, INCOME_INTERVALS, IncomeInterval, TAXES, TAX_NAMES } from '~/lib/config';
+import { BASE_CURRENCY, CURRENCIES, INCOME_INTERVALS, IncomeInterval, TAXES, TAX_NAMES } from '~/lib/config';
 import { formatAsInteger } from '~/lib/format';
 import { state } from '~/lib/state';
 import { useTaxesChart } from '~/lib/taxes';
@@ -45,8 +45,7 @@ export default function ChartPage() {
               min={0}
               label="Venit de la"
               value={chartSnapshot.incomeFrom || ''}
-              onChange={(val) => (state.chart.incomeFrom = typeof val === 'number' ? val : NaN)}
-              error={chartSnapshot.incomeFrom == null ? 'Scrie o valoare' : null}
+              onChange={(val) => (state.chart.incomeFrom = typeof val === 'number' ? val : 0)}
             />
           </GridCol>
           <GridCol span={{ base: 6, xs: 3 }}>
@@ -56,8 +55,14 @@ export default function ChartPage() {
               min={chartSnapshot.incomeFrom || 0}
               label="Până la"
               value={chartSnapshot.incomeTo || ''}
-              onChange={(val) => (state.chart.incomeTo = typeof val === 'number' ? val : NaN)}
-              error={chartSnapshot.incomeTo == null ? 'Scrie o valoare' : null}
+              onChange={(val) => (state.chart.incomeTo = typeof val === 'number' ? val : 0)}
+              error={
+                chartSnapshot.incomeTo === 0
+                  ? 'Scrie o valoare pozitivă'
+                  : chartSnapshot.incomeTo <= (chartSnapshot.incomeFrom || 0)
+                  ? `Trebuie să fie mai mare de ${chartSnapshot.incomeFrom || 0}`
+                  : null
+              }
             />
           </GridCol>
           <GridCol span={{ base: 6, xs: 3 }}>
@@ -81,7 +86,13 @@ export default function ChartPage() {
       </Card>
       <Card ref={ref} p="md" h={width ? 'auto' : 180} withBorder radius="md">
         <LoadingOverlay
-          visible={!width || exchangeRatesLoading}
+          visible={
+            (chartSnapshot.incomeCurrency !== BASE_CURRENCY &&
+              !!commonSnapshot.deductibleExpenses &&
+              commonSnapshot.deductibleExpensesCurrency !== BASE_CURRENCY &&
+              exchangeRatesLoading) ||
+            !width
+          }
           zIndex={1000}
           overlayProps={{ radius: 'sm', blur: 2 }}
         />
@@ -128,8 +139,10 @@ export default function ChartPage() {
         <SettingsNotice />
         <ExchangeRatesNotice
           exchangeRates={exchangeRates}
-          incomeCurrency={chartSnapshot.incomeCurrency}
-          deductibleExpensesCurrency={commonSnapshot.deductibleExpensesCurrency}
+          incomeCurrency={chartSnapshot.incomeTo ? chartSnapshot.incomeCurrency : null}
+          deductibleExpensesCurrency={
+            commonSnapshot.deductibleExpenses ? commonSnapshot.deductibleExpensesCurrency : null
+          }
         />
       </Stack>
     </Page>

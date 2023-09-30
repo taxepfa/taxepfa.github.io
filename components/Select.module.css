@@ -1,6 +1,13 @@
-.label {
+.label,
+.description {
   display: none;
-  @media (min-width: $mantine-breakpoint-xs) {
+}
+
+@media (min-width: $mantine-breakpoint-xs) {
+  .label {
     display: inline-block;
+  }
+  .description {
+    display: block;
   }
 }
