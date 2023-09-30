@@ -28,7 +28,7 @@ export function computeTaxes({
   deductibleExpenses = deductibleExpenses || 0;
 
   if (
-    income === null ||
+    income === 0 ||
     ((incomeCurrency !== BASE_CURRENCY || deductibleExpensesCurrency !== BASE_CURRENCY) && !exchangeRates)
   ) {
     return;
@@ -162,7 +162,7 @@ export function useTaxesChart({
     incomeTaxPercentage: number;
   }[] = [];
 
-  if (!exchangeRates || incomeFrom === null || incomeTo === null) {
+  if (!exchangeRates || incomeFrom >= incomeTo) {
     return {
       data,
       exchangeRates,

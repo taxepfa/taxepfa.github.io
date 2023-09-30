@@ -48,8 +48,8 @@ export default function HomePage() {
               min={0}
               label="Venit estimat"
               value={calculatorSnapshot.income || ''}
-              onChange={(val) => (state.calculator.income = typeof val === 'number' ? val : null)}
-              error={calculatorSnapshot.income == null ? 'Scrie o valoare' : null}
+              onChange={(val) => (state.calculator.income = typeof val === 'number' ? val : 0)}
+              error={calculatorSnapshot.income === 0 ? 'Scrie o valoare pozitivă' : null}
             />
           </GridCol>
           <GridCol span={{ base: 6, xs: 3 }}>
@@ -72,7 +72,16 @@ export default function HomePage() {
         </Grid>
       </Card>
       <Card className={classes.results} withBorder p="md" radius="md" pos="relative">
-        <LoadingOverlay visible={exchangeRatesLoading} zIndex={1000} overlayProps={{ radius: 'sm', blur: 2 }} />
+        <LoadingOverlay
+          visible={
+            calculatorSnapshot.incomeCurrency !== BASE_CURRENCY &&
+            !!commonSnapshot.deductibleExpenses &&
+            commonSnapshot.deductibleExpensesCurrency !== BASE_CURRENCY &&
+            exchangeRatesLoading
+          }
+          zIndex={1000}
+          overlayProps={{ radius: 'sm', blur: 2 }}
+        />
         <div className={classes.resultTexts}>
           <Text className={classes.resultText} fz={22}>
             Vei plăti ciolacilor în {NEXT_YEAR}
@@ -146,8 +155,10 @@ export default function HomePage() {
         <SettingsNotice />
         <ExchangeRatesNotice
           exchangeRates={exchangeRates}
-          incomeCurrency={calculatorSnapshot.incomeCurrency}
-          deductibleExpensesCurrency={commonSnapshot.deductibleExpensesCurrency}
+          incomeCurrency={calculatorSnapshot.income ? calculatorSnapshot.incomeCurrency : null}
+          deductibleExpensesCurrency={
+            commonSnapshot.deductibleExpenses ? commonSnapshot.deductibleExpensesCurrency : null
+          }
         />
       </Stack>
     </Page>

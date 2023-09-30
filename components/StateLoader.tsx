@@ -12,6 +12,7 @@ export function StateLoader() {
         const newState = JSON.parse(serializedState) as State & { appVersion: string };
 
         if (newState.appVersion !== process.env.APP_VERSION) {
+          console.info('App version changed, will reset local storage state...');
           localStorage.removeItem(LOCAL_STORAGE_STATE_KEY);
           return;
         }
@@ -41,9 +42,13 @@ export function StateLoader() {
         state.settings.workingDaysPerMonth =
           newState.settings.workingDaysPerMonth || initialState.settings.workingDaysPerMonth;
       }
-    } catch (err) {
-      // just log the error for now
-      console.error(err);
+    } catch {
+      console.warn('Error while trying to load state from local storage, will try to reset it...');
+      try {
+        localStorage.removeItem(LOCAL_STORAGE_STATE_KEY);
+      } finally {
+        // Do nothing
+      }
     }
   }, []);
 
