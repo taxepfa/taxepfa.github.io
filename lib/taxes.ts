@@ -79,6 +79,9 @@ export function computeTaxes({
     totalIncome *= 12 - unpaidMonths;
   }
 
+  // this is because people could accidentally input too much unpaid time
+  totalIncome = Math.max(totalIncome, 0);
+
   if (incomeCurrency !== BASE_CURRENCY) {
     totalIncome *= exchangeRates![incomeCurrency];
   }
