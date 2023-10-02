@@ -1,3 +1,6 @@
+export const WEEKS_PER_YEAR = 52.1429;
+export const WEEKS_PER_MONTH = 4.34524;
+
 export const YEAR = 2024;
 export const NEXT_YEAR = YEAR + 1;
 
@@ -11,7 +14,6 @@ export const EXCHANGE_RATES_RELOAD_INTERVAL = 3_600_000;
 
 export type IncomeInterval = 'hourly' | 'daily' | 'monthly' | 'yearly';
 export type DeductibleExpensesInterval = 'monthly' | 'yearly';
-export type UnpaidTimeUnits = 'days' | 'weeks' | 'months';
 
 export const INCOME_INTERVALS: {
   value: IncomeInterval;
@@ -21,15 +23,6 @@ export const INCOME_INTERVALS: {
   { value: 'daily', label: 'pe zi' },
   { value: 'monthly', label: 'pe lună' },
   { value: 'yearly', label: 'pe tot anul' },
-];
-
-export const UNPAID_TIME_UNITS: {
-  value: UnpaidTimeUnits;
-  label: string;
-}[] = [
-  { value: 'days', label: 'zile' },
-  { value: 'weeks', label: 'săptămâni' },
-  { value: 'months', label: 'luni' },
 ];
 
 export const DEDUCTIBLE_EXPENSES_INTERVALS = INCOME_INTERVALS.filter(
@@ -62,3 +55,5 @@ export const TAX_NAMES = {
 } as const;
 
 export const LOCAL_STORAGE_STATE_KEY = 'state';
+
+export const CHART_STEPS = 50;

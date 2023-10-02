@@ -1,25 +1,21 @@
 'use client';
 
-import { Card, Grid, GridCol, Group, LoadingOverlay, NumberInput, RingProgress, Stack, Text } from '@mantine/core';
+import { Card, Group, LoadingOverlay, RingProgress, Text } from '@mantine/core';
 import { useSnapshot } from 'valtio';
-import { CommonInputGridCols } from '~/components/CommonInputGridCols';
-import { ExchangeRatesNotice } from '~/components/ExchageRatesNotice';
+import { FootNotes } from '~/components/FootNotes';
+import { InputCard } from '~/components/InputCard';
 import { Page } from '~/components/Page';
-import { Select } from '~/components/Select';
-import { SettingsNotice } from '~/components/SettingsNotice';
-import { BASE_CURRENCY, CURRENCIES, INCOME_INTERVALS, IncomeInterval, NEXT_YEAR, YEAR } from '~/lib/config';
+import { BASE_CURRENCY, NEXT_YEAR } from '~/lib/config';
 import { formatAsBaseCurrency, formatAsPercentage } from '~/lib/format';
 import { state } from '~/lib/state';
 import { useTaxesCalculator } from '~/lib/taxes';
 import classes from './page.module.css';
 
 export default function HomePage() {
-  const calculatorSnapshot = useSnapshot(state.calculator);
-  const commonSnapshot = useSnapshot(state.common);
-  const settingsSnapshot = useSnapshot(state.settings);
+  const snap = useSnapshot(state);
 
   const {
-    totalIncome,
+    grossIncome,
     totalTaxAmount,
     totalTaxPercentage,
     pensionTaxAmount,
@@ -27,8 +23,9 @@ export default function HomePage() {
     incomeTaxAmount,
     exchangeRates,
     exchangeRatesLoading,
-  } = useTaxesCalculator({ calculatorSnapshot, commonSnapshot, settingsSnapshot });
-  const totalTaxPercentageOver100 = totalTaxPercentage && totalTaxPercentage > 100;
+  } = useTaxesCalculator(snap);
+
+  const totalTaxPercentageOver100 = !!totalTaxPercentage && totalTaxPercentage > 100;
   const color = totalTaxPercentage
     ? totalTaxPercentage > 100
       ? 'red'
@@ -39,44 +36,12 @@ export default function HomePage() {
 
   return (
     <Page>
-      <Card p="md" withBorder radius="md">
-        <Grid gutter="md" pb="xs">
-          <GridCol span={{ xs: 6 }}>
-            <NumberInput
-              hideControls
-              required
-              min={0}
-              label="Venit estimat"
-              value={calculatorSnapshot.income || ''}
-              onChange={(val) => (state.calculator.income = typeof val === 'number' ? val : 0)}
-              error={calculatorSnapshot.income === 0 ? 'Scrie o valoare pozitivă' : null}
-            />
-          </GridCol>
-          <GridCol span={{ base: 6, xs: 3 }}>
-            <Select
-              ariaLabel="Moneda venitului"
-              data={CURRENCIES}
-              value={calculatorSnapshot.incomeCurrency}
-              onChange={(val: string) => (state.calculator.incomeCurrency = val)}
-            />
-          </GridCol>
-          <GridCol span={{ base: 6, xs: 3 }}>
-            <Select
-              ariaLabel="Intervalul pe care este estimat venitul"
-              data={INCOME_INTERVALS}
-              value={calculatorSnapshot.incomeInterval}
-              onChange={(val: string) => (state.calculator.incomeInterval = val as IncomeInterval)}
-            />
-          </GridCol>
-          <CommonInputGridCols />
-        </Grid>
-      </Card>
+      <InputCard />
       <Card className={classes.results} withBorder p="md" radius="md" pos="relative">
         <LoadingOverlay
           visible={
-            calculatorSnapshot.incomeCurrency !== BASE_CURRENCY &&
-            !!commonSnapshot.deductibleExpenses &&
-            commonSnapshot.deductibleExpensesCurrency !== BASE_CURRENCY &&
+            (snap.incomeCurrency !== BASE_CURRENCY ||
+              (snap.deductibleExpenses !== 0 && snap.deductibleExpensesCurrency !== BASE_CURRENCY)) &&
             exchangeRatesLoading
           }
           zIndex={1000}
@@ -87,7 +52,7 @@ export default function HomePage() {
             Vei plăti ciolacilor în {NEXT_YEAR}
           </Text>
           <div>
-            <Text fz="xs" c="dimmed">
+            <Text fz="sm" c="dimmed">
               În total
             </Text>
             <Text className={classes.resultText} c={color} fz={36}>
@@ -96,20 +61,26 @@ export default function HomePage() {
           </div>
           <Group>
             <div>
-              <Text size="xs" c="dimmed" mb={4}>
-                CAS (pensie)
+              <Text size="sm" c="dimmed" mb={4}>
+                CAS
+                <br />
+                (pensie)
               </Text>
               <Text className={classes.resultText}>{formatAsBaseCurrency(pensionTaxAmount)}</Text>
             </div>
             <div>
-              <Text size="xs" c="dimmed" mb={4}>
-                CASS (sănătate)
+              <Text size="sm" c="dimmed" mb={4}>
+                CASS
+                <br />
+                (sănătate)
               </Text>
               <Text className={classes.resultText}>{formatAsBaseCurrency(healthTaxAmount)}</Text>
             </div>
             <div>
-              <Text size="xs" c="dimmed" mb={4}>
-                Impozit pe venit
+              <Text size="sm" c="dimmed" mb={4}>
+                Impozit
+                <br />
+                pe venit
               </Text>
               <Text className={classes.resultText}>{formatAsBaseCurrency(incomeTaxAmount)}</Text>
             </div>
@@ -118,26 +89,26 @@ export default function HomePage() {
         <div className={classes.resultRing}>
           <RingProgress
             roundCaps
-            thickness={8}
-            size={200}
+            thickness={10}
+            size={240}
             sections={[{ value: totalTaxPercentage || 0, color }]}
             label={
               <div>
-                <Text ta="center" fz="xs" mt={-16} c="dimmed">
+                <Text ta="center" fz="sm" mt={-10} c="dimmed">
                   Adică
                   <br />
                   {totalTaxPercentageOver100 ? (
-                    <Text component="span" fz="xs" c={color} fw="bold">
+                    <Text component="span" fz="sm" c={color} fw="bold">
                       mai mult de
                     </Text>
                   ) : (
                     'aproximativ'
                   )}
                 </Text>
-                <Text ta="center" c={color} fz={48} className={classes.resultText}>
+                <Text ta="center" c={color} fz={64} className={classes.resultText}>
                   {formatAsPercentage(totalTaxPercentageOver100 ? 100 : totalTaxPercentage)}
                 </Text>
-                <Text ta="center" fz="xs" mt={2} c="dimmed">
+                <Text ta="center" fz="sm" mt={2} c="dimmed">
                   din venitul tău
                 </Text>
               </div>
@@ -145,22 +116,7 @@ export default function HomePage() {
           />
         </div>
       </Card>
-      <Stack gap="xs">
-        {totalIncome !== undefined &&
-          (calculatorSnapshot.incomeCurrency !== BASE_CURRENCY || calculatorSnapshot.incomeInterval !== 'yearly') && (
-            <Text size="xs" c="dimmed" ta="center">
-              Venitul tău brut estimat pentru anul {YEAR} este de {formatAsBaseCurrency(totalIncome)}.
-            </Text>
-          )}
-        <SettingsNotice />
-        <ExchangeRatesNotice
-          exchangeRates={exchangeRates}
-          incomeCurrency={calculatorSnapshot.income ? calculatorSnapshot.incomeCurrency : null}
-          deductibleExpensesCurrency={
-            commonSnapshot.deductibleExpenses ? commonSnapshot.deductibleExpensesCurrency : null
-          }
-        />
-      </Stack>
+      <FootNotes grossIncome={grossIncome} exchangeRates={exchangeRates} />
     </Page>
   );
 }
