@@ -13,3 +13,7 @@ a {
     color: light-dark(var(--mantine-color-blue-6), var(--mantine-color-blue-5));
   }
 }
+
+.nowrap {
+  white-space: nowrap;
+}

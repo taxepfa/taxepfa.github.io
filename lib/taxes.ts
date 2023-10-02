@@ -1,128 +1,72 @@
-import { BASE_CURRENCY, HEALTH_PERCENTAGE, PENSION_PERCENTAGE } from './config';
+import {
+  BASE_CURRENCY,
+  CHART_STEPS,
+  HEALTH_PERCENTAGE,
+  INCOME_TAX_PERCENTAGE,
+  PENSION_PERCENTAGE,
+  WEEKS_PER_MONTH,
+  WEEKS_PER_YEAR,
+} from './config';
 import { ExchangeRates, useExchangeRates } from './exchangeRates';
-import { state } from './state';
+import { State } from './state';
 
-type CalculatorSnapshot = (typeof state)['calculator'];
-type ChartSnapshot = (typeof state)['chart'];
-type CommonSnapshot = (typeof state)['common'];
-type SettingsSnapshot = (typeof state)['settings'];
-
-export function computeTaxes({
-  calculatorSnapshot: { income, incomeCurrency, incomeInterval },
-  commonSnapshot: {
-    deductibleExpenses,
-    deductibleExpensesCurrency,
-    deductibleExpensesInterval,
-    unpaidTime,
-    unpaidTimeUnits,
-  },
-  settingsSnapshot: { minimumWage, workingDaysPerMonth, workingDaysPerWeek, workingHoursPerDay },
+export function calculateTaxes({
+  income,
+  incomeCurrency,
+  incomeInterval,
+  deductibleExpenses,
+  deductibleExpensesCurrency,
+  deductibleExpensesInterval,
+  minimumWage,
+  workingHoursPerWeek,
+  workingDaysPerWeek,
+  vacationWeeksPerYear,
   exchangeRates,
-}: {
-  calculatorSnapshot: CalculatorSnapshot;
-  commonSnapshot: CommonSnapshot;
-  settingsSnapshot: SettingsSnapshot;
-  exchangeRates: ExchangeRates | undefined;
-}) {
-  unpaidTime = unpaidTime || 0;
-  deductibleExpenses = deductibleExpenses || 0;
-
+}: State & { exchangeRates: ExchangeRates | undefined }) {
   if (
-    income === 0 ||
-    ((incomeCurrency !== BASE_CURRENCY || deductibleExpensesCurrency !== BASE_CURRENCY) && !exchangeRates)
+    (incomeCurrency !== BASE_CURRENCY && !exchangeRates) ||
+    (deductibleExpensesCurrency !== BASE_CURRENCY && !exchangeRates)
   ) {
     return;
   }
 
-  let totalIncome = income;
-  if (incomeInterval === 'hourly') {
-    let unpaidHours = 0;
-    switch (unpaidTimeUnits) {
-      case 'days':
-        unpaidHours = unpaidTime * workingHoursPerDay;
-        break;
-      case 'weeks':
-        unpaidHours = unpaidTime * workingDaysPerWeek * workingHoursPerDay;
-        break;
-      case 'months':
-        unpaidHours = unpaidTime * workingDaysPerMonth * workingHoursPerDay;
-        break;
-    }
-    totalIncome *= workingDaysPerMonth * workingHoursPerDay * 12 - unpaidHours;
-  } else if (incomeInterval === 'daily') {
-    let unpaidDays = 0;
-    switch (unpaidTimeUnits) {
-      case 'days':
-        unpaidDays = unpaidTime;
-        break;
-      case 'weeks':
-        unpaidDays = unpaidTime * workingDaysPerWeek;
-        break;
-      case 'months':
-        unpaidDays = unpaidTime * workingDaysPerMonth;
-        break;
-    }
-    totalIncome *= workingDaysPerMonth * 12 - unpaidDays;
-  } else if (incomeInterval === 'monthly') {
-    let unpaidMonths = 0;
-    switch (unpaidTimeUnits) {
-      case 'days':
-        unpaidMonths = unpaidTime / workingDaysPerMonth;
-        break;
-      case 'weeks':
-        unpaidMonths = unpaidTime / (workingDaysPerWeek * workingDaysPerMonth);
-        break;
-      case 'months':
-        unpaidMonths = unpaidTime;
-        break;
-    }
-    totalIncome *= 12 - unpaidMonths;
-  }
+  if (incomeInterval === 'hourly') income *= workingHoursPerWeek * (WEEKS_PER_YEAR - vacationWeeksPerYear);
+  else if (incomeInterval === 'daily') income *= workingDaysPerWeek * (WEEKS_PER_YEAR - vacationWeeksPerYear);
+  else if (incomeInterval === 'monthly') income *= 12 - vacationWeeksPerYear / WEEKS_PER_MONTH;
 
-  // this is because people could accidentally input too much unpaid time
-  totalIncome = Math.max(totalIncome, 0);
+  // people could accidentally input too many vacation weeks, so we need to make sure the income is not negative
+  income = Math.max(income, 0);
 
-  if (incomeCurrency !== BASE_CURRENCY) {
-    totalIncome *= exchangeRates![incomeCurrency];
-  }
+  if (incomeCurrency !== BASE_CURRENCY) income *= exchangeRates![incomeCurrency];
+
+  const grossIncome = income;
+
+  if (deductibleExpensesInterval === 'monthly') deductibleExpenses *= 12;
+  if (deductibleExpensesCurrency !== BASE_CURRENCY) deductibleExpenses *= exchangeRates![deductibleExpensesCurrency];
+
+  income -= deductibleExpenses;
 
   let pensionTaxAmount = 0;
-  if (totalIncome >= minimumWage * 24) {
-    pensionTaxAmount = minimumWage * 24 * PENSION_PERCENTAGE;
-  } else if (totalIncome >= minimumWage * 12) {
-    pensionTaxAmount = minimumWage * 12 * PENSION_PERCENTAGE;
-  }
-
-  const pensionTaxPercentage = totalIncome === 0 ? 0 : (pensionTaxAmount / totalIncome) * 100;
+  if (income >= minimumWage * 24) pensionTaxAmount = minimumWage * 24 * PENSION_PERCENTAGE;
+  else if (income >= minimumWage * 12) pensionTaxAmount = minimumWage * 12 * PENSION_PERCENTAGE;
+  const pensionTaxPercentage = grossIncome === 0 ? 0 : (pensionTaxAmount / grossIncome) * 100;
 
   let healthTaxAmount = 0;
-  if (totalIncome >= minimumWage * 60) {
-    healthTaxAmount = minimumWage * 60 * HEALTH_PERCENTAGE;
-  } else if (totalIncome >= minimumWage * 6) {
-    healthTaxAmount = totalIncome * HEALTH_PERCENTAGE;
-  } else {
-    healthTaxAmount = minimumWage * 6 * HEALTH_PERCENTAGE;
-  }
-  const healthTaxPercentage = (healthTaxAmount / totalIncome) * 100;
+  if (income >= minimumWage * 60) healthTaxAmount = minimumWage * 60 * HEALTH_PERCENTAGE;
+  else if (income >= minimumWage * 6) healthTaxAmount = income * HEALTH_PERCENTAGE;
+  else healthTaxAmount = minimumWage * 6 * HEALTH_PERCENTAGE;
+  const healthTaxPercentage = (healthTaxAmount / grossIncome) * 100;
 
-  let totalDeductibleExpenses = deductibleExpenses;
-  if (deductibleExpensesInterval === 'monthly') {
-    totalDeductibleExpenses = deductibleExpenses * 12;
-  }
-  if (deductibleExpensesCurrency !== BASE_CURRENCY) {
-    totalDeductibleExpenses *= exchangeRates![deductibleExpensesCurrency];
-  }
+  const taxableIncome = Math.max(income - pensionTaxAmount - healthTaxAmount - deductibleExpenses, 0);
 
-  const taxableIncome = Math.max(totalIncome - pensionTaxAmount - healthTaxAmount - totalDeductibleExpenses, 0);
-
-  const incomeTaxAmount = taxableIncome * 0.1;
-  const incomeTaxPercentage = totalIncome === 0 ? 0 : (incomeTaxAmount / totalIncome) * 100;
+  const incomeTaxAmount = taxableIncome * INCOME_TAX_PERCENTAGE;
+  const incomeTaxPercentage = grossIncome === 0 ? 0 : (incomeTaxAmount / grossIncome) * 100;
 
   const totalTaxAmount = pensionTaxAmount + healthTaxAmount + incomeTaxAmount;
-  const totalTaxPercentage = (totalTaxAmount / totalIncome) * 100;
+  const totalTaxPercentage = (totalTaxAmount / grossIncome) * 100;
 
   return {
-    totalIncome,
+    grossIncome,
     totalTaxAmount,
     totalTaxPercentage,
     pensionTaxAmount,
@@ -134,29 +78,19 @@ export function computeTaxes({
   };
 }
 
-export function useTaxesCalculator(params: {
-  calculatorSnapshot: CalculatorSnapshot;
-  commonSnapshot: CommonSnapshot;
-  settingsSnapshot: SettingsSnapshot;
-}) {
+export function useTaxesCalculator(params: State) {
   const { exchangeRates, exchangeRatesLoading } = useExchangeRates();
   return {
-    ...computeTaxes({ ...params, exchangeRates }),
+    ...calculateTaxes({ ...params, exchangeRates }),
     exchangeRates,
     exchangeRatesLoading,
   };
 }
 
-export function useTaxesChart({
-  chartSnapshot: { incomeFrom, incomeTo, incomeCurrency, incomeInterval },
-  commonSnapshot,
-  settingsSnapshot,
-}: {
-  chartSnapshot: ChartSnapshot;
-  commonSnapshot: CommonSnapshot;
-  settingsSnapshot: SettingsSnapshot;
-}) {
+export function useTaxesChart({ income, ...otherParams }: State) {
   const { exchangeRates, exchangeRatesLoading } = useExchangeRates();
+  let grossIncome: number | undefined;
+  let totalTaxPercentage: number | undefined;
 
   let data: {
     income: number;
@@ -165,19 +99,22 @@ export function useTaxesChart({
     incomeTaxPercentage: number;
   }[] = [];
 
-  if (!exchangeRates || incomeFrom >= incomeTo) {
+  if (!exchangeRates || income === 0) {
     return {
       data,
+      grossIncome,
       exchangeRates,
       exchangeRatesLoading,
     };
   }
 
-  for (let i = incomeFrom; i <= incomeTo; i += (incomeTo - incomeFrom) / 50) {
-    const { pensionTaxPercentage, healthTaxPercentage, incomeTaxPercentage } = computeTaxes({
-      calculatorSnapshot: { income: i === 0 ? 0.1 : i, incomeCurrency, incomeInterval },
-      commonSnapshot,
-      settingsSnapshot,
+  const incomeTo = income * 2;
+  const step = incomeTo / CHART_STEPS;
+
+  for (let i = 0; i <= incomeTo; i += step) {
+    const { pensionTaxPercentage, healthTaxPercentage, incomeTaxPercentage } = calculateTaxes({
+      income: i === 0 ? 0.1 : i,
+      ...otherParams,
       exchangeRates,
     })!;
 
@@ -189,8 +126,12 @@ export function useTaxesChart({
     });
   }
 
+  ({ grossIncome, totalTaxPercentage } = calculateTaxes({ income, ...otherParams, exchangeRates })!);
+
   return {
     data,
+    grossIncome,
+    totalTaxPercentage,
     exchangeRates,
     exchangeRatesLoading,
   };

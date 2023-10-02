@@ -1,29 +1,21 @@
 'use client';
 
-import { Card, Grid, GridCol, LoadingOverlay, NumberInput, Stack, useMantineTheme } from '@mantine/core';
+import { Card, LoadingOverlay, useMantineTheme } from '@mantine/core';
 import { useElementSize } from '@mantine/hooks';
-import { Area, AreaChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis } from 'recharts';
+import { Area, AreaChart, CartesianGrid, Legend, ReferenceLine, Tooltip, XAxis, YAxis } from 'recharts';
 import { useSnapshot } from 'valtio';
 import { ChartTooltip } from '~/components/ChartTooltip';
-import { CommonInputGridCols } from '~/components/CommonInputGridCols';
-import { ExchangeRatesNotice } from '~/components/ExchageRatesNotice';
+import { FootNotes } from '~/components/FootNotes';
+import { InputCard } from '~/components/InputCard';
 import { Page } from '~/components/Page';
-import { Select } from '~/components/Select';
-import { SettingsNotice } from '~/components/SettingsNotice';
-import { BASE_CURRENCY, CURRENCIES, INCOME_INTERVALS, IncomeInterval, TAXES, TAX_NAMES } from '~/lib/config';
+import { BASE_CURRENCY, TAXES, TAX_NAMES } from '~/lib/config';
 import { formatAsInteger } from '~/lib/format';
 import { state } from '~/lib/state';
 import { useTaxesChart } from '~/lib/taxes';
 
 export default function ChartPage() {
-  const chartSnapshot = useSnapshot(state.chart);
-  const commonSnapshot = useSnapshot(state.common);
-  const settingsSnapshot = useSnapshot(state.settings);
-  const { data, exchangeRates, exchangeRatesLoading } = useTaxesChart({
-    chartSnapshot,
-    commonSnapshot,
-    settingsSnapshot,
-  });
+  const snap = useSnapshot(state);
+  const { data, grossIncome, totalTaxPercentage, exchangeRates, exchangeRatesLoading } = useTaxesChart(snap);
 
   const { ref, width } = useElementSize();
   const { colors } = useMantineTheme();
@@ -34,64 +26,23 @@ export default function ChartPage() {
     incomeTaxPercentage: colors.green[6],
   } as const;
 
+  const yTicks = [0, 50];
+  if (totalTaxPercentage && totalTaxPercentage < 50) {
+    const tick = Number(totalTaxPercentage.toFixed(2));
+    if (!yTicks.includes(tick)) yTicks.push(tick);
+    yTicks.sort();
+  }
+
   return (
     <Page>
-      <Card p="md" withBorder radius="md">
-        <Grid gutter="md" pb="xs">
-          <GridCol span={{ base: 6, xs: 3 }}>
-            <NumberInput
-              hideControls
-              required
-              min={0}
-              label="Venit de la"
-              value={chartSnapshot.incomeFrom || ''}
-              onChange={(val) => (state.chart.incomeFrom = typeof val === 'number' ? val : 0)}
-            />
-          </GridCol>
-          <GridCol span={{ base: 6, xs: 3 }}>
-            <NumberInput
-              hideControls
-              required
-              min={chartSnapshot.incomeFrom || 0}
-              label="Până la"
-              value={chartSnapshot.incomeTo || ''}
-              onChange={(val) => (state.chart.incomeTo = typeof val === 'number' ? val : 0)}
-              error={
-                chartSnapshot.incomeTo === 0
-                  ? 'Scrie o valoare pozitivă'
-                  : chartSnapshot.incomeTo <= (chartSnapshot.incomeFrom || 0)
-                  ? `Trebuie să fie mai mare de ${chartSnapshot.incomeFrom || 0}`
-                  : null
-              }
-            />
-          </GridCol>
-          <GridCol span={{ base: 6, xs: 3 }}>
-            <Select
-              ariaLabel="Moneda venitului"
-              data={CURRENCIES}
-              value={chartSnapshot.incomeCurrency}
-              onChange={(val: string) => (state.chart.incomeCurrency = val)}
-            />
-          </GridCol>
-          <GridCol span={{ base: 6, xs: 3 }}>
-            <Select
-              ariaLabel="Intervalul pe care este estimat venitul"
-              data={INCOME_INTERVALS}
-              value={chartSnapshot.incomeInterval}
-              onChange={(val: string) => (state.chart.incomeInterval = val as IncomeInterval)}
-            />
-          </GridCol>
-          <CommonInputGridCols />
-        </Grid>
-      </Card>
+      <InputCard />
       <Card ref={ref} p="md" h={width ? 'auto' : 180} withBorder radius="md">
         <LoadingOverlay
           visible={
-            (chartSnapshot.incomeCurrency !== BASE_CURRENCY &&
-              !!commonSnapshot.deductibleExpenses &&
-              commonSnapshot.deductibleExpensesCurrency !== BASE_CURRENCY &&
-              exchangeRatesLoading) ||
-            !width
+            !width ||
+            ((snap.incomeCurrency !== BASE_CURRENCY ||
+              (snap.deductibleExpenses !== 0 && snap.deductibleExpensesCurrency !== BASE_CURRENCY)) &&
+              exchangeRatesLoading)
           }
           zIndex={1000}
           overlayProps={{ radius: 'sm', blur: 2 }}
@@ -104,47 +55,35 @@ export default function ChartPage() {
             margin={{
               top: 20,
               right: 10,
-              left: -10,
+              left: 10,
               bottom: 80,
             }}
           >
             <CartesianGrid strokeDasharray="3 3" cursor={'pointer'} />
             <XAxis
               dataKey="income"
-              tickFormatter={(v) => `${formatAsInteger(v)} ${chartSnapshot.incomeCurrency}`}
+              tickFormatter={(v) => `${formatAsInteger(v)} ${snap.incomeCurrency}`}
               angle={-45}
               textAnchor="end"
             />
-            <YAxis domain={[0, 50]} allowDataOverflow tickFormatter={(v) => `${v}%`} />
+            <YAxis domain={[0, 50]} allowDataOverflow ticks={yTicks} tickFormatter={(v) => `${v}%`} />
             <Tooltip
               content={({ active, payload }) => {
                 if (!active || !payload) return null;
                 return (
-                  <ChartTooltip
-                    {...payload![0].payload}
-                    incomeCurrency={chartSnapshot.incomeCurrency}
-                    taxColors={taxColors}
-                  />
+                  <ChartTooltip {...payload![0].payload} incomeCurrency={snap.incomeCurrency} taxColors={taxColors} />
                 );
               }}
             />
             {TAXES.map((tax) => (
               <Area key={tax} type="monotone" dataKey={tax} stackId="1" stroke={taxColors[tax]} fill={taxColors[tax]} />
             ))}
+            <ReferenceLine y={totalTaxPercentage} stroke="currentColor" opacity={0.5} />
             <Legend wrapperStyle={{ marginBottom: -70 }} formatter={(v: keyof typeof TAX_NAMES) => TAX_NAMES[v]} />
           </AreaChart>
         )}
       </Card>
-      <Stack gap="xs">
-        <SettingsNotice />
-        <ExchangeRatesNotice
-          exchangeRates={exchangeRates}
-          incomeCurrency={chartSnapshot.incomeTo ? chartSnapshot.incomeCurrency : null}
-          deductibleExpensesCurrency={
-            commonSnapshot.deductibleExpenses ? commonSnapshot.deductibleExpensesCurrency : null
-          }
-        />
-      </Stack>
+      <FootNotes grossIncome={grossIncome} exchangeRates={exchangeRates} />
     </Page>
   );
 }

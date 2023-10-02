@@ -5,14 +5,7 @@ import classes from './Title.module.css';
 export function Title() {
   return (
     <Center component="h1" className={classes.root}>
-      <svg
-        className={classes.logo}
-        width="32"
-        height="32"
-        viewBox="0 0 32 32"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+      <svg className={classes.logo} width="32" height="32" viewBox="0 0 32 32" fill="none">
         <path d="M23.6 13H18V26H26L23.6 13Z" fill="#e73145" />
         <rect x="14" y="13" width="4" height="13" fill="#fcd116" />
         <path d="M8.4 13H14V26H6L8.4 13Z" fill="#2659bc" />
