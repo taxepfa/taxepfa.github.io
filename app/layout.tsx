@@ -21,7 +21,7 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
   return (
     <html lang="ro">
       <head>
-        <ColorSchemeScript />
+        <ColorSchemeScript defaultColorScheme="auto" />
         <link rel="manifest" href="/manifest.json" />
         <link rel="shortcut icon" href="/favicon.svg" />
         <meta name="application-name" content="Taxe PFA" />
@@ -31,7 +31,7 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
       </head>
       <body>
         <StateLoader />
-        <MantineProvider theme={theme}>
+        <MantineProvider theme={theme} defaultColorScheme="auto">
           <Notifications position="top-center" />
           <Header />
           <Container size="sm" className={classes.container}>
