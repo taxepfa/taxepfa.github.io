@@ -13,14 +13,18 @@ import { theme } from '~/theme';
 import classes from './layout.module.css';
 
 export const metadata: Metadata = {
-  applicationName: 'Taxe PFA',
+  metadataBase: new URL('https://taxe-pfa.github.io'),
+  applicationName: `Taxe PFA în ${YEAR}`,
   title: `Taxe PFA în ${YEAR}`,
   viewport: 'width=device-width, initial-scale=1, shrink-to-fit=no',
-  manifest: '/manifest.json',
-  themeColor: '#25262b',
+  themeColor: [
+    { media: '(prefers-color-scheme: dark)', color: '#25262b' },
+    { media: '(prefers-color-scheme: light)', color: '#fff' },
+  ],
   authors: [{ name: AUTHOR_NAME, url: AUTHOR_URL }],
   description: `Estimează rapid taxele pe care trebuie să le plătești ca PFA în ${NEXT_YEAR} pentru veniturile din ${YEAR}, dacă lucrezi în sistem real ca neplătitor de TVA`,
   keywords: `pfa, freelancing, taxe, calculator, grafic, contabilitate, fiscalitate, venituri, impozit, contributii, sistem real, ${YEAR}, ${NEXT_YEAR}`,
+  openGraph: { images: [{ url: '/taxe-pfa.png', alt: `Taxe PFA în ${YEAR}` }] },
 };
 
 export default function RootLayout({ children }: React.PropsWithChildren) {
@@ -28,7 +32,6 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
     <html lang="ro">
       <head>
         <ColorSchemeScript defaultColorScheme="auto" />
-        <link rel="shortcut icon" href="/favicon.svg" />
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
       <body>
