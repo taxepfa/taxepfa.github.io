@@ -1,54 +1,17 @@
-'use client';
-
-import { Card, NumberInput, Stack, Text } from '@mantine/core';
-import { useSnapshot } from 'valtio';
+import { Metadata } from 'next';
 import { Page } from '~/components/Page';
-import { BASE_CURRENCY } from '~/lib/config';
-import { state } from '~/lib/state';
+import { YEAR } from '~/lib/config';
+import SettingsPageContent from './SettingsPageContent';
+
+export const metadata: Metadata = {
+  title: `Setări | Taxe PFA în ${YEAR}`,
+  description: `Setează salariul minim pe economie și plafonul de TVA pentru a estima rapid taxele pe care va trebui să le plătești ca PFA în ${YEAR} pentru veniturile din ${YEAR}`,
+};
 
 export default function SettingsPage() {
-  const snap = useSnapshot(state);
-
   return (
     <Page>
-      <Card p="md" withBorder radius="md">
-        <Stack gap="md">
-          <NumberInput
-            hideControls
-            required
-            min={0}
-            label="Salariul minim pe economie"
-            description="Reprezintă baza de calcul pentru taxe și impozite, mărită anual din pix de ciolaci"
-            rightSectionWidth={50}
-            rightSectionPointerEvents="none"
-            rightSection={
-              <Text c="dimmed" fz="sm" w="100%" pr="xs" ta="right">
-                {BASE_CURRENCY}
-              </Text>
-            }
-            value={snap.minimumWage}
-            onChange={(val) => (state.minimumWage = val = '' ? 0 : Number(val))}
-            error={snap.vatThreshold <= 0 ? 'Scrie o valoare pozitivă' : null}
-          />
-          <NumberInput
-            hideControls
-            required
-            min={0}
-            label="Plafon de TVA"
-            description="Venitul anual peste care ești obligat să te înregistrezi în scopuri de TVA"
-            rightSectionWidth={50}
-            rightSectionPointerEvents="none"
-            rightSection={
-              <Text c="dimmed" fz="sm" w="100%" pr="xs" ta="right">
-                {BASE_CURRENCY}
-              </Text>
-            }
-            value={snap.vatThreshold}
-            onChange={(val) => (state.vatThreshold = val = '' ? 0 : Number(val))}
-            error={snap.vatThreshold <= 0 ? 'Scrie o valoare pozitivă' : null}
-          />
-        </Stack>
-      </Card>
+      <SettingsPageContent />
     </Page>
   );
 }
