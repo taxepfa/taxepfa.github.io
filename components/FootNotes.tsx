@@ -1,19 +1,19 @@
-import { Stack, Text } from '@mantine/core';
+import { Box, Text } from '@mantine/core';
 import Link from 'next/link';
 import { useSnapshot } from 'valtio';
-import { BASE_CURRENCY, VAT_THRESHOLD, YEAR } from '~/lib/config';
+import { BASE_CURRENCY, YEAR } from '~/lib/config';
 import { ExchangeRates } from '~/lib/exchangeRates';
 import { formatAsBaseCurrency, formatAsInteger, formatExchangeRate } from '~/lib/format';
 import { state } from '~/lib/state';
 
 export type FootNotesProps = {
   grossIncome: number | undefined;
+  grossIncomeOverVATThreshold: boolean | undefined;
   exchangeRates: ExchangeRates | undefined;
 };
 
-export function FootNotes({ grossIncome, exchangeRates }: FootNotesProps) {
+export function FootNotes({ grossIncome, grossIncomeOverVATThreshold, exchangeRates }: FootNotesProps) {
   const { incomeCurrency, incomeInterval, minimumWage, deductibleExpensesCurrency } = useSnapshot(state);
-  const grossIncomeOverVATThreshold = grossIncome !== undefined && grossIncome > VAT_THRESHOLD;
   const usedExchangeRates = [];
   if (incomeCurrency && incomeCurrency !== BASE_CURRENCY && exchangeRates) {
     usedExchangeRates.push({
@@ -36,9 +36,9 @@ export function FootNotes({ grossIncome, exchangeRates }: FootNotesProps) {
   const multipleExchangeRates = usedExchangeRatesCount > 1;
 
   return (
-    <Stack gap="xs">
+    <Box maw={360} mx="auto">
       {grossIncome !== undefined && (incomeCurrency !== BASE_CURRENCY || incomeInterval !== 'yearly') && (
-        <Text size="xs" c={grossIncomeOverVATThreshold ? 'red' : 'dimmed'} ta="center">
+        <Text size="xs" c={grossIncomeOverVATThreshold ? 'orange' : 'dimmed'} ta="center">
           Venitul tău brut estimat pentru anul {YEAR} este de{' '}
           <span className="nowrap">{formatAsBaseCurrency(grossIncome)}</span>.
           {grossIncomeOverVATThreshold && (
@@ -49,11 +49,14 @@ export function FootNotes({ grossIncome, exchangeRates }: FootNotesProps) {
           )}
         </Text>
       )}
-      <Text size="xs" c="dimmed" ta="center" maw={360} mx="auto">
+      <Text size="xs" c="dimmed" ta="center">
         <Link href="/setari">Presupunem</Link> că salariul minim pe economie este de{' '}
-        <span className="nowrap">{formatAsInteger(minimumWage)} RON</span>.
+        <span className="nowrap">
+          {formatAsInteger(minimumWage)} {BASE_CURRENCY}
+        </span>
+        .
       </Text>
-      {usedExchangeRatesCount && (
+      {usedExchangeRatesCount > 0 && (
         <Text size="xs" c="dimmed" ta="center">
           Curs{multipleExchangeRates ? 'uri' : ''} de schimb folosit{multipleExchangeRates ? 'e' : ''}:{' '}
           {usedExchangeRates.map((rate, index) => (
@@ -65,6 +68,6 @@ export function FootNotes({ grossIncome, exchangeRates }: FootNotesProps) {
           .
         </Text>
       )}
-    </Stack>
+    </Box>
   );
 }

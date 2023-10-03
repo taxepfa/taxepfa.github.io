@@ -1,30 +1,32 @@
 import { proxy } from 'valtio';
-import { DeductibleExpensesInterval, IncomeInterval } from './config';
+import { BASE_CURRENCY, DeductibleExpensesInterval, IncomeInterval } from './config';
 
 export type State = {
   income: number;
   incomeCurrency: string;
   incomeInterval: IncomeInterval;
-  minimumWage: number;
   workingHoursPerWeek: number;
   workingDaysPerWeek: number;
   vacationWeeksPerYear: number;
   deductibleExpenses: number;
   deductibleExpensesCurrency: string;
   deductibleExpensesInterval: DeductibleExpensesInterval;
+  minimumWage: number;
+  vatThreshold: number;
 };
 
 export const initialState: State = {
   income: 12000,
-  incomeCurrency: 'RON',
+  incomeCurrency: BASE_CURRENCY,
   incomeInterval: 'monthly',
-  minimumWage: 3300,
   workingHoursPerWeek: 40,
   workingDaysPerWeek: 5,
   vacationWeeksPerYear: 4,
   deductibleExpenses: 0,
-  deductibleExpensesCurrency: 'RON',
+  deductibleExpensesCurrency: BASE_CURRENCY,
   deductibleExpensesInterval: 'monthly',
+  minimumWage: 3_300,
+  vatThreshold: 300_000,
 };
 
 export const state = proxy<State>(initialState);

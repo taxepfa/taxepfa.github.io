@@ -5,7 +5,7 @@ import { subscribe } from 'valtio';
 import { LOCAL_STORAGE_STATE_KEY } from '~/lib/config';
 import { State, initialState, state } from '~/lib/state';
 
-export function StateLoader() {
+export function StateSynchronizer() {
   useEffect(() => {
     try {
       const serializedStateBackup = localStorage.getItem(LOCAL_STORAGE_STATE_KEY);

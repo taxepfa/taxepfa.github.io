@@ -17,18 +17,18 @@ export function calculateTaxes({
   deductibleExpenses,
   deductibleExpensesCurrency,
   deductibleExpensesInterval,
-  minimumWage,
   workingHoursPerWeek,
   workingDaysPerWeek,
   vacationWeeksPerYear,
+  minimumWage,
+  vatThreshold,
   exchangeRates,
 }: State & { exchangeRates: ExchangeRates | undefined }) {
   if (
     (incomeCurrency !== BASE_CURRENCY && !exchangeRates) ||
     (deductibleExpensesCurrency !== BASE_CURRENCY && !exchangeRates)
-  ) {
+  )
     return;
-  }
 
   if (incomeInterval === 'hourly') income *= workingHoursPerWeek * (WEEKS_PER_YEAR - vacationWeeksPerYear);
   else if (incomeInterval === 'daily') income *= workingDaysPerWeek * (WEEKS_PER_YEAR - vacationWeeksPerYear);
@@ -67,6 +67,7 @@ export function calculateTaxes({
 
   return {
     grossIncome,
+    grossIncomeOverVATThreshold: grossIncome > vatThreshold,
     totalTaxAmount,
     totalTaxPercentage,
     pensionTaxAmount,
@@ -87,26 +88,19 @@ export function useTaxesCalculator(params: State) {
   };
 }
 
+export type ChartDataPoint = {
+  income: number;
+  pensionTaxPercentage: number;
+  healthTaxPercentage: number;
+  incomeTaxPercentage: number;
+};
+
 export function useTaxesChart({ income, ...otherParams }: State) {
   const { exchangeRates, exchangeRatesLoading } = useExchangeRates();
-  let grossIncome: number | undefined;
-  let totalTaxPercentage: number | undefined;
 
-  let data: {
-    income: number;
-    pensionTaxPercentage: number;
-    healthTaxPercentage: number;
-    incomeTaxPercentage: number;
-  }[] = [];
+  let data: ChartDataPoint[] = [];
 
-  if (!exchangeRates || income === 0) {
-    return {
-      data,
-      grossIncome,
-      exchangeRates,
-      exchangeRatesLoading,
-    };
-  }
+  if (!exchangeRates || income === 0) return;
 
   const incomeTo = income * 2;
   const step = incomeTo / CHART_STEPS;
@@ -126,12 +120,13 @@ export function useTaxesChart({ income, ...otherParams }: State) {
     });
   }
 
-  ({ grossIncome, totalTaxPercentage } = calculateTaxes({ income, ...otherParams, exchangeRates })!);
-
   return {
     data,
-    grossIncome,
-    totalTaxPercentage,
+    ...calculateTaxes({
+      income,
+      ...otherParams,
+      exchangeRates,
+    }),
     exchangeRates,
     exchangeRatesLoading,
   };

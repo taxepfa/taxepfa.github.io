@@ -1,17 +1,24 @@
 import { Card, Text, Title } from '@mantine/core';
+import { Metadata } from 'next';
 import { Page } from '~/components/Page';
+import { AUTHOR_NAME, AUTHOR_URL, YEAR } from '~/lib/config';
+
+export const metadata: Metadata = {
+  title: `Despre proiect | Taxe PFA în ${YEAR}`,
+  description: `Află cum, de ce și cine a dezvoltat proiectul Taxe PFA în ${YEAR} - un calculator care te ajută să estimezi rapid taxele pe care va trebui să le plătești ca PFA în ${YEAR} pentru veniturile din ${YEAR}`,
+};
 
 export default function AboutPage() {
   return (
     <Page>
       <Card p="md" withBorder radius="md">
         <Title order={2} mt="xs" mb="xl">
-          Despre acest proiect
+          Despre proiect
         </Title>
         <Text size="sm" mb="sm">
           Acest calculator rapid de taxe pentru PFA a fost realizat de{' '}
-          <a href="http://github.com/icflorescu" target="_blank">
-            Ionuț-Cristian Florescu
+          <a href={AUTHOR_URL} target="_blank">
+            {AUTHOR_NAME}
           </a>{' '}
           cu TypeScript, React, Next.js,{' '}
           <a href="https://mantine.dev" target="_blank">
@@ -64,17 +71,69 @@ export default function AboutPage() {
         <Text size="sm" mb="sm">
           Sper ca acest calculator să te ajute să iei o decizie informată în ceea ce privește statutul tău fiscal.
         </Text>
-        <Text size="sm" mb="lg">
-          Numai bine,
-          <br />
-          <a href="http://github.com/icflorescu" target="_blank">
-            Ionuț-Cristian Florescu
+        <Title order={3} size="sm" mt="md" mb="sm">
+          Despre autor
+        </Title>
+        <Text size="sm" mb="sm">
+          Sunt{' '}
+          <a href={AUTHOR_URL} target="_blank">
+            {AUTHOR_NAME}
           </a>
+          , dezvoltator software/web cu peste 20 ani de experiență în domeniu.
+          <br />
+          Am lucrat pentru companii mari din România și din străinătate, dar și pentru clienți mici și mijlocii, atât în
+          calitate de angajat, cât și ca <em>freelancer</em>.
         </Text>
-        <Text size="sm" mb="lg" fs="italic">
-          P.S. Dacă ai nevoie de ajutor în dezvoltare web care implică vreuna din tehnologiile menționate la începutul
-          acestei pagini, nu ezita să-mi dai un semn la adresa de email menționată în{' '}
-          <a href="http://github.com/icflorescu" target="_blank">
+        <Text size="sm" mb="sm">
+          În ultimii ani m-am concentrat pe dezvoltarea de aplicații web folosind tehnologii precum React/Next.js,
+          Svelte/SvelteKit, Node.js, TypeScript, tRPC, GraphQL, PostgreSQL, Docker, etc.
+        </Text>
+        <Text size="sm" mb="sm">
+          Sunt autorul unui număr de proiecte open-source de succes, printre care{' '}
+          <a href="https://icflorescu.github.io/mantine-datatable/" target="_blank">
+            Mantine DataTable
+          </a>
+          ,{' '}
+          <a href="https://icflorescu.github.io/mantine-contextmenu/" target="_blank">
+            Mantine ContextMenu
+          </a>
+          ,{' '}
+          <a href="https://icflorescu.github.io/trpc-sveltekit/" target="_blank">
+            tRPC-SvelteKit
+          </a>
+          ,{' '}
+          <a href="https://pocketbase-uml.github.io" target="_blank">
+            PocketBaseUML
+          </a>
+          ,{' '}
+          <a href="https://github.com/icflorescu/expose-wsl" target="_blank">
+            Expose-WSL
+          </a>
+          ,{' '}
+          <a href="https://github.com/icflorescu/iisexpress-proxy" target="_blank">
+            IISExpressProxy
+          </a>{' '}
+          și{' '}
+          <a href={AUTHOR_URL} target="_blank">
+            altele
+          </a>
+          .
+        </Text>
+        <Text size="sm" mb="sm">
+          Pe GitHub mă găsești{' '}
+          <a href={AUTHOR_URL} target="_blank">
+            aici
+          </a>
+          , iar pe LinkedIn{' '}
+          <a href="https://www.linkedin.com/in/icflorescu/" target="_blank">
+            aici
+          </a>
+          .
+        </Text>
+        <Text size="sm" mb="lg">
+          Dacă ai nevoie de ajutor în dezvoltare web care implică vreuna din tehnologiile menționate mai sus, nu ezita
+          să-mi dai un semn la adresa de email menționată în{' '}
+          <a href={AUTHOR_URL} target="_blank">
             contul meu de GitHub
           </a>
           .

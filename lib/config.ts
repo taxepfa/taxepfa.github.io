@@ -1,3 +1,6 @@
+export const AUTHOR_NAME = 'Ionuț-Cristian Florescu';
+export const AUTHOR_URL = 'https://github.com/icflorescu';
+
 export const WEEKS_PER_YEAR = 52.1429;
 export const WEEKS_PER_MONTH = 4.34524;
 
@@ -7,9 +10,8 @@ export const NEXT_YEAR = YEAR + 1;
 export const PENSION_PERCENTAGE = 0.25;
 export const HEALTH_PERCENTAGE = 0.1;
 export const INCOME_TAX_PERCENTAGE = 0.1;
-export const CURRENCIES = ['RON', 'EUR', 'USD', 'GBP', 'CHF'];
 export const BASE_CURRENCY = 'RON';
-export const VAT_THRESHOLD = 300_000;
+export const CURRENCIES = [BASE_CURRENCY, 'EUR', 'USD', 'GBP', 'CHF', 'CAD', 'AUD'];
 export const EXCHANGE_RATES_RELOAD_INTERVAL = 3_600_000;
 
 export type IncomeInterval = 'hourly' | 'daily' | 'monthly' | 'yearly';
@@ -52,6 +54,12 @@ export const TAX_NAMES = {
   healthTaxPercentage: 'CASS',
   pensionTaxPercentage: 'CAS',
   incomeTaxPercentage: 'Imp. pe venit',
+} as const;
+
+export const TAX_CHART_COLORS = {
+  healthTaxPercentage: 'red',
+  pensionTaxPercentage: 'grape',
+  incomeTaxPercentage: 'teal',
 } as const;
 
 export const LOCAL_STORAGE_STATE_KEY = 'state';

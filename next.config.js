@@ -8,6 +8,9 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   output: 'export',
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
   env: {
     APP_VERSION,
   },
