@@ -8,6 +8,7 @@ import {
   IncomeInterval,
 } from '~/lib/config';
 import { state } from '~/lib/state';
+import classes from './InputCard.module.css';
 import { Select } from './Select';
 
 export type InputCardProps = {
@@ -25,6 +26,14 @@ export function InputCard({ grossIncomeOverVATThreshold }: InputCardProps) {
             required
             min={0}
             label="Venit estimat"
+            description={
+              grossIncomeOverVATThreshold ? (
+                <Text className={classes.warning} size="xs" c="orange">
+                  Atenție, vei depăși pragul de TVA!
+                </Text>
+              ) : null
+            }
+            inputWrapperOrder={['label', 'input', 'description', 'error']}
             value={snap.income || ''}
             onChange={(val) => (state.income = val === '' ? 0 : Number(val))}
             error={snap.income <= 0 ? 'Scrie o valoare pozitivă' : null}
@@ -62,7 +71,7 @@ export function InputCard({ grossIncomeOverVATThreshold }: InputCardProps) {
               min={0}
               value={snap.workingHoursPerWeek || ''}
               onChange={(val) => (state.workingHoursPerWeek = val === '' ? 0 : Number(val))}
-              error={snap.workingHoursPerWeek < 0 ? 'Scrie o valoare pozitivă' : null}
+              error={snap.workingHoursPerWeek <= 0 ? 'Scrie o valoare pozitivă' : null}
             />
           </GridCol>
         )}
@@ -81,7 +90,7 @@ export function InputCard({ grossIncomeOverVATThreshold }: InputCardProps) {
               min={0}
               value={snap.workingDaysPerWeek || ''}
               onChange={(val) => (state.workingDaysPerWeek = val === '' ? 0 : Number(val))}
-              error={snap.workingDaysPerWeek < 0 ? 'Scrie o valoare pozitivă' : null}
+              error={snap.workingDaysPerWeek <= 0 ? 'Scrie o valoare pozitivă' : null}
             />
           </GridCol>
         )}
