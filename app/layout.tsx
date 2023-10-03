@@ -13,7 +13,7 @@ import { theme } from '~/theme';
 import classes from './layout.module.css';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://taxe-pfa.github.io'),
+  metadataBase: new URL('https://taxepfa.github.io'),
   applicationName: `Taxe PFA în ${YEAR}`,
   title: `Taxe PFA în ${YEAR}`,
   viewport: 'width=device-width, initial-scale=1, shrink-to-fit=no',
