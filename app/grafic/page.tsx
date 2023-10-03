@@ -2,29 +2,24 @@
 
 import { Card, LoadingOverlay, useMantineTheme } from '@mantine/core';
 import { useElementSize } from '@mantine/hooks';
-import { Area, AreaChart, CartesianGrid, Legend, ReferenceLine, Tooltip, XAxis, YAxis } from 'recharts';
+import { Area, AreaChart, CartesianGrid, Legend, ReferenceDot, Tooltip, XAxis, YAxis } from 'recharts';
 import { useSnapshot } from 'valtio';
 import { ChartTooltip } from '~/components/ChartTooltip';
 import { FootNotes } from '~/components/FootNotes';
 import { InputCard } from '~/components/InputCard';
 import { Page } from '~/components/Page';
-import { BASE_CURRENCY, TAXES, TAX_NAMES } from '~/lib/config';
+import { BASE_CURRENCY, CHART_STEPS, TAXES, TAX_CHART_COLORS, TAX_NAMES } from '~/lib/config';
 import { formatAsInteger } from '~/lib/format';
 import { state } from '~/lib/state';
 import { useTaxesChart } from '~/lib/taxes';
 
 export default function ChartPage() {
   const snap = useSnapshot(state);
-  const { data, grossIncome, totalTaxPercentage, exchangeRates, exchangeRatesLoading } = useTaxesChart(snap);
+  const { data, grossIncome, grossIncomeOverVATThreshold, totalTaxPercentage, exchangeRates, exchangeRatesLoading } =
+    useTaxesChart(snap) || {};
 
   const { ref, width } = useElementSize();
   const { colors } = useMantineTheme();
-
-  const taxColors = {
-    healthTaxPercentage: colors.red[6],
-    pensionTaxPercentage: colors.blue[6],
-    incomeTaxPercentage: colors.green[6],
-  } as const;
 
   const yTicks = [0, 50];
   if (totalTaxPercentage && totalTaxPercentage < 50) {
@@ -35,7 +30,7 @@ export default function ChartPage() {
 
   return (
     <Page>
-      <InputCard />
+      <InputCard grossIncomeOverVATThreshold={grossIncomeOverVATThreshold} />
       <Card ref={ref} p="md" h={width ? 'auto' : 180} withBorder radius="md">
         <LoadingOverlay
           visible={
@@ -68,22 +63,37 @@ export default function ChartPage() {
             />
             <YAxis domain={[0, 50]} allowDataOverflow ticks={yTicks} tickFormatter={(v) => `${v}%`} />
             <Tooltip
-              content={({ active, payload }) => {
-                if (!active || !payload) return null;
-                return (
-                  <ChartTooltip {...payload![0].payload} incomeCurrency={snap.incomeCurrency} taxColors={taxColors} />
-                );
-              }}
+              content={({ active, payload }) =>
+                active && payload ? (
+                  <ChartTooltip
+                    {...payload![0].payload}
+                    incomeCurrency={snap.incomeCurrency}
+                    incomeInterval={snap.incomeInterval}
+                  />
+                ) : null
+              }
             />
-            {TAXES.map((tax) => (
-              <Area key={tax} type="monotone" dataKey={tax} stackId="1" stroke={taxColors[tax]} fill={taxColors[tax]} />
-            ))}
-            <ReferenceLine y={totalTaxPercentage} stroke="currentColor" opacity={0.5} />
+            {TAXES.map((tax) => {
+              const color = colors[TAX_CHART_COLORS[tax]][6];
+              return <Area key={tax} type="monotone" dataKey={tax} stackId="1" stroke={color} fill={color} />;
+            })}
+            <ReferenceDot
+              y={totalTaxPercentage}
+              x={data?.[CHART_STEPS / 2].income}
+              stroke="currentColor"
+              fill="transparent"
+              opacity={0.75}
+              r={6}
+            />
             <Legend wrapperStyle={{ marginBottom: -70 }} formatter={(v: keyof typeof TAX_NAMES) => TAX_NAMES[v]} />
           </AreaChart>
         )}
       </Card>
-      <FootNotes grossIncome={grossIncome} exchangeRates={exchangeRates} />
+      <FootNotes
+        grossIncome={grossIncome}
+        grossIncomeOverVATThreshold={grossIncomeOverVATThreshold}
+        exchangeRates={exchangeRates}
+      />
     </Page>
   );
 }

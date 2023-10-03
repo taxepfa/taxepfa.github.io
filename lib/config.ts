@@ -54,6 +54,12 @@ export const TAX_NAMES = {
   incomeTaxPercentage: 'Imp. pe venit',
 } as const;
 
+export const TAX_CHART_COLORS = {
+  healthTaxPercentage: 'red',
+  pensionTaxPercentage: 'grape',
+  incomeTaxPercentage: 'teal',
+} as const;
+
 export const LOCAL_STORAGE_STATE_KEY = 'state';
 
 export const CHART_STEPS = 50;

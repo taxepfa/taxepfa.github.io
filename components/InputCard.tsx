@@ -10,7 +10,11 @@ import {
 import { state } from '~/lib/state';
 import { Select } from './Select';
 
-export function InputCard() {
+export type InputCardProps = {
+  grossIncomeOverVATThreshold: boolean | undefined;
+};
+
+export function InputCard({ grossIncomeOverVATThreshold }: InputCardProps) {
   const snap = useSnapshot(state);
   return (
     <Card p="md" withBorder radius="md">

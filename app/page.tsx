@@ -5,7 +5,7 @@ import { useSnapshot } from 'valtio';
 import { FootNotes } from '~/components/FootNotes';
 import { InputCard } from '~/components/InputCard';
 import { Page } from '~/components/Page';
-import { BASE_CURRENCY, NEXT_YEAR } from '~/lib/config';
+import { BASE_CURRENCY, NEXT_YEAR, VAT_THRESHOLD } from '~/lib/config';
 import { formatAsBaseCurrency, formatAsPercentage } from '~/lib/format';
 import { state } from '~/lib/state';
 import { useTaxesCalculator } from '~/lib/taxes';
@@ -25,6 +25,7 @@ export default function HomePage() {
     exchangeRatesLoading,
   } = useTaxesCalculator(snap);
 
+  const grossIncomeOverVATThreshold = grossIncome !== undefined && grossIncome > VAT_THRESHOLD;
   const totalTaxPercentageOver100 = !!totalTaxPercentage && totalTaxPercentage > 100;
   const color = totalTaxPercentage
     ? totalTaxPercentage > 100
@@ -36,7 +37,7 @@ export default function HomePage() {
 
   return (
     <Page>
-      <InputCard />
+      <InputCard grossIncomeOverVATThreshold={grossIncomeOverVATThreshold} />
       <Card className={classes.results} withBorder p="md" radius="md" pos="relative">
         <LoadingOverlay
           visible={
@@ -116,7 +117,11 @@ export default function HomePage() {
           />
         </div>
       </Card>
-      <FootNotes grossIncome={grossIncome} exchangeRates={exchangeRates} />
+      <FootNotes
+        grossIncome={grossIncome}
+        grossIncomeOverVATThreshold={grossIncomeOverVATThreshold}
+        exchangeRates={exchangeRates}
+      />
     </Page>
   );
 }

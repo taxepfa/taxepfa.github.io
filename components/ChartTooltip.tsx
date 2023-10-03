@@ -1,20 +1,22 @@
-import { Box, Group, Text } from '@mantine/core';
-import { TAXES, TAX_NAMES } from '~/lib/config';
+import { Box, Group, Text, useMantineTheme } from '@mantine/core';
+import { INCOME_INTERVALS, IncomeInterval, TAXES, TAX_CHART_COLORS, TAX_NAMES } from '~/lib/config';
 import { formatAsDecimalPercentage, formatAsInteger } from '~/lib/format';
 import classes from './ChartTooltip.module.css';
 
 export type ChartTooltipProps = {
   income: number;
+  incomeInterval: IncomeInterval;
   incomeCurrency: string;
   healthTaxPercentage: number;
   pensionTaxPercentage: number;
   incomeTaxPercentage: number;
-  taxColors: Record<string, string>;
 };
 
 export function ChartTooltip(props: ChartTooltipProps) {
-  const { income, incomeCurrency, healthTaxPercentage, pensionTaxPercentage, incomeTaxPercentage, taxColors } = props;
+  const { income, incomeCurrency, incomeInterval, healthTaxPercentage, pensionTaxPercentage, incomeTaxPercentage } =
+    props;
   const totalTaxPercentage = healthTaxPercentage + pensionTaxPercentage + incomeTaxPercentage;
+  const { colors } = useMantineTheme();
   return (
     <Box py="xs" className={classes.root}>
       <Group justify="space-between" px="xs" pb={6} mb={6} className={classes.header}>
@@ -22,12 +24,12 @@ export function ChartTooltip(props: ChartTooltipProps) {
           Venit:
         </Text>
         <Text size="xs" fw="bold">
-          {formatAsInteger(income)} {incomeCurrency}
+          {formatAsInteger(income)} {incomeCurrency} {INCOME_INTERVALS.find((i) => i.value === incomeInterval)?.label}
         </Text>
       </Group>
       {TAXES.map((tax) => {
         const taxPercentage = props[tax];
-        const color = taxColors[tax];
+        const color = colors[TAX_CHART_COLORS[tax]][6];
         return (
           <Group key={tax} justify="space-between" px="xs">
             <Text size="xs" c={color} fw="bold">
