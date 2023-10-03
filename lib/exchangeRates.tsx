@@ -2,7 +2,6 @@ import { notifications } from '@mantine/notifications';
 import { IconX } from '@tabler/icons-react';
 import useSWR from 'swr';
 import { BASE_CURRENCY, CURRENCIES, EXCHANGE_RATES_RELOAD_INTERVAL } from './config';
-import classes from './exchangeRates.module.css';
 
 const BASE_CURRENCY_LOWER_CASE = BASE_CURRENCY.toLowerCase();
 
@@ -22,7 +21,7 @@ export function useExchangeRates() {
           title: 'Eroare!',
           message: 'Cursurile de schimb valutar nu au putut fi încărcate.',
           color: 'red',
-          icon: <IconX className={classes.errorIcon} />,
+          icon: <IconX className="notification-error-icon" />,
           onClose: () => {
             notifications.clean();
           },

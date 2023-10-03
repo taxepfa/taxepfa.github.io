@@ -4,15 +4,21 @@ import './global.css';
 
 import { ColorSchemeScript, Container, MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
+import { Metadata } from 'next';
 import { Footer } from '~/components/Footer';
 import { Header } from '~/components/Header';
 import { StateLoader } from '~/components/StateLoader';
-import { NEXT_YEAR, YEAR } from '~/lib/config';
+import { AUTHOR_NAME, AUTHOR_URL, NEXT_YEAR, YEAR } from '~/lib/config';
 import { theme } from '~/theme';
 import classes from './layout.module.css';
 
-export const metadata = {
+export const metadata: Metadata = {
+  applicationName: 'Taxe PFA',
   title: `Taxe PFA în ${YEAR}`,
+  viewport: 'width=device-width, initial-scale=1, shrink-to-fit=no',
+  manifest: '/manifest.json',
+  themeColor: '#25262b',
+  authors: [{ name: AUTHOR_NAME, url: AUTHOR_URL }],
   description: `Calculează taxele pe care trebuie să le plătești ca PFA în ${NEXT_YEAR} pentru veniturile din ${YEAR}.`,
   keywords: `pfa, freelancing, taxe, calculator, grafic, contabilitate, fiscalitate, venituri, impozit, contributii, ${YEAR}, ${NEXT_YEAR}`,
 };
@@ -22,12 +28,8 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
     <html lang="ro">
       <head>
         <ColorSchemeScript defaultColorScheme="auto" />
-        <link rel="manifest" href="/manifest.json" />
         <link rel="shortcut icon" href="/favicon.svg" />
-        <meta name="application-name" content="Taxe PFA" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="theme-color" content="#25262b" />
-        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
       </head>
       <body>
         <StateLoader />

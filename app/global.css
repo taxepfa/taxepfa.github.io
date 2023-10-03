@@ -17,3 +17,8 @@ a {
 .nowrap {
   white-space: nowrap;
 }
+
+.notification-error-icon {
+  width: 20rem;
+  height: 20rem;
+}

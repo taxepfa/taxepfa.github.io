@@ -1,12 +1,13 @@
 import { Text } from '@mantine/core';
+import { AUTHOR_NAME, AUTHOR_URL } from '~/lib/config';
 import classes from './Footer.module.css';
 
 export function Footer() {
   return (
     <Text className={classes.root} size="xs" c="dimmed" ta="center">
       Realizat de{' '}
-      <a href="https://github.com/icflorescu" target="_blank">
-        Ionut-Cristian Florescu
+      <a href={AUTHOR_URL} target="_blank">
+        {AUTHOR_NAME}
       </a>
       .
       <br />

@@ -1,3 +1,6 @@
+export const AUTHOR_NAME = 'Ionuț-Cristian Florescu';
+export const AUTHOR_URL = 'https://github.com/icflorescu';
+
 export const WEEKS_PER_YEAR = 52.1429;
 export const WEEKS_PER_MONTH = 4.34524;
 
