@@ -1,11 +1,11 @@
 import { Card, Text, Title } from '@mantine/core';
 import { Metadata } from 'next';
 import { Page } from '~/components/Page';
-import { AUTHOR_NAME, AUTHOR_URL, YEAR } from '~/lib/config';
+import { APP_NAME, AUTHOR_NAME, AUTHOR_URL, YEAR } from '~/lib/config';
 
 export const metadata: Metadata = {
-  title: `Despre proiect | Taxe PFA în ${YEAR}`,
-  description: `Află cum, de ce și cine a dezvoltat proiectul Taxe PFA în ${YEAR} - un calculator care te ajută să estimezi rapid taxele pe care va trebui să le plătești ca PFA în ${YEAR} pentru veniturile din ${YEAR}`,
+  title: `Despre proiect | ${APP_NAME}`,
+  description: `Află cum, de ce și cine a dezvoltat proiectul ${APP_NAME} - un calculator care te ajută să estimezi rapid taxele pe care va trebui să le plătești ca PFA în ${YEAR} pentru veniturile din ${YEAR}`,
 };
 
 export default function AboutPage() {
