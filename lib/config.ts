@@ -9,7 +9,6 @@ export const HEALTH_PERCENTAGE = 0.1;
 export const INCOME_TAX_PERCENTAGE = 0.1;
 export const BASE_CURRENCY = 'RON';
 export const CURRENCIES = [BASE_CURRENCY, 'EUR', 'USD', 'GBP', 'CHF', 'CAD', 'AUD'];
-export const VAT_THRESHOLD = 300_000;
 export const EXCHANGE_RATES_RELOAD_INTERVAL = 3_600_000;
 
 export type IncomeInterval = 'hourly' | 'daily' | 'monthly' | 'yearly';

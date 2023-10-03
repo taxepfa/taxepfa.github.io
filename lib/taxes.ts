@@ -4,7 +4,6 @@ import {
   HEALTH_PERCENTAGE,
   INCOME_TAX_PERCENTAGE,
   PENSION_PERCENTAGE,
-  VAT_THRESHOLD,
   WEEKS_PER_MONTH,
   WEEKS_PER_YEAR,
 } from './config';
@@ -18,10 +17,11 @@ export function calculateTaxes({
   deductibleExpenses,
   deductibleExpensesCurrency,
   deductibleExpensesInterval,
-  minimumWage,
   workingHoursPerWeek,
   workingDaysPerWeek,
   vacationWeeksPerYear,
+  minimumWage,
+  vatThreshold,
   exchangeRates,
 }: State & { exchangeRates: ExchangeRates | undefined }) {
   if (
@@ -67,7 +67,7 @@ export function calculateTaxes({
 
   return {
     grossIncome,
-    grossIncomeOverVATThreshold: grossIncome > VAT_THRESHOLD,
+    grossIncomeOverVATThreshold: grossIncome > vatThreshold,
     totalTaxAmount,
     totalTaxPercentage,
     pensionTaxAmount,
