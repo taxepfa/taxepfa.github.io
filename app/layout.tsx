@@ -33,6 +33,7 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
       <head>
         <ColorSchemeScript defaultColorScheme="auto" />
         <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="google-site-verification" content="L6JPlDRjMoPJJJE0rr6qy4kzgOlgQ0hUdny-OMIEP4I" />
       </head>
       <body>
         <StateSynchronizer />
