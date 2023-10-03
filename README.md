@@ -2,6 +2,8 @@
 
 A simple tax calculator for freelancers working as sole traders (PFA) in Romania.
 
+[![taxepfa.github.io](https://user-images.githubusercontent.com/581999/272381443-ce709a7f-f020-4108-8cac-549d0fa6b091.png)](https://taxepfa.github.io)
+
 ## Tech-stack
 
 - [React](https://reactjs.org/)
