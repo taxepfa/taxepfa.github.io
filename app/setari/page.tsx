@@ -3,6 +3,7 @@
 import { Card, NumberInput, Text } from '@mantine/core';
 import { useSnapshot } from 'valtio';
 import { Page } from '~/components/Page';
+import { BASE_CURRENCY } from '~/lib/config';
 import { state } from '~/lib/state';
 
 export default function SettingsPage() {
@@ -21,7 +22,7 @@ export default function SettingsPage() {
           rightSectionPointerEvents="none"
           rightSection={
             <Text c="dimmed" fz="sm" w="100%" pr="xs" ta="right">
-              RON
+              {BASE_CURRENCY}
             </Text>
           }
           value={snap.minimumWage}

@@ -51,7 +51,10 @@ export function FootNotes({ grossIncome, exchangeRates }: FootNotesProps) {
       )}
       <Text size="xs" c="dimmed" ta="center" maw={360} mx="auto">
         <Link href="/setari">Presupunem</Link> că salariul minim pe economie este de{' '}
-        <span className="nowrap">{formatAsInteger(minimumWage)} RON</span>.
+        <span className="nowrap">
+          {formatAsInteger(minimumWage)} {BASE_CURRENCY}
+        </span>
+        .
       </Text>
       {usedExchangeRatesCount && (
         <Text size="xs" c="dimmed" ta="center">
