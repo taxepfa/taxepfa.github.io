@@ -5,7 +5,7 @@ A simple tax calculator for freelancers working as sole traders (PFA) in Romania
 ## Tech-stack
 
 - [React](https://reactjs.org/)
-- [Typescript](https://www.typescriptlang.org/)
+- [TypeScript](https://www.typescriptlang.org/)
 - [Next.js](https://nextjs.org/)
 - [Mantine](https://mantine.dev/)
 - [Valtio](https://valtio.pmnd.rs/docs/introduction/getting-started)
