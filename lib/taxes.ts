@@ -52,13 +52,13 @@ export function calculateTaxes({
   // subtract deductible expenses from the income
   income -= deductibleExpenses;
 
-  // calculate the pension tax amount and percentage of the gross income
+  // calculate the pension tax amount (CAS) and percentage of the gross income
   let pensionTaxAmount = 0;
   if (income >= minimumWage * 24) pensionTaxAmount = minimumWage * 24 * PENSION_PERCENTAGE;
   else if (income >= minimumWage * 12) pensionTaxAmount = minimumWage * 12 * PENSION_PERCENTAGE;
   const pensionTaxPercentage = grossIncome === 0 ? 0 : (pensionTaxAmount / grossIncome) * 100;
 
-  // calculate the health tax amount and percentage of the gross income
+  // calculate the health tax amount (CASS) and percentage of the gross income
   let healthTaxAmount = 0;
   if (income >= minimumWage * 60) healthTaxAmount = minimumWage * 60 * HEALTH_PERCENTAGE;
   else if (income >= minimumWage * 6) healthTaxAmount = income * HEALTH_PERCENTAGE;
