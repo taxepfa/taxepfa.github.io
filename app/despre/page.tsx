@@ -65,8 +65,8 @@ export default function AboutPage() {
           cheltuială sau bătaie de cap.
         </Text>
         <Text size="sm" mb="sm">
-          Nu mă declar expert, însă nu vorbesc din (‿|‿), ci din experiență. De-a lungul anilor am lucrat ca angajat, ca
-          PFA, și pentru o perioadă de timp am deținut o firmă.
+          Nu mă declar expert, însă nu vorbesc din <span className="nowrap">(‿|‿)</span>, ci din experiență. De-a lungul
+          anilor am lucrat ca angajat, ca PFA, și pentru o perioadă de timp am deținut o firmă.
         </Text>
         <Text size="sm" mb="sm">
           Sper ca acest calculator să te ajute să iei o decizie informată în ceea ce privește statutul tău fiscal.
