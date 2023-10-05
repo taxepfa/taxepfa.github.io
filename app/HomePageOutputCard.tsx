@@ -1,9 +1,14 @@
 import { Card, Group, LoadingOverlay, RingProgress, Text } from '@mantine/core';
+import { useElementSize } from '@mantine/hooks';
 import { useSnapshot } from 'valtio';
 import { BASE_CURRENCY, NEXT_YEAR } from '~/lib/config';
 import { formatAsBaseCurrency, formatAsPercentage } from '~/lib/format';
 import { state } from '~/lib/state';
+import { useWidthAbove } from '~/lib/utils';
 import classes from './HomePageOutputCard.module.css';
+
+const MIN_RING_WIDTH = 240;
+const MAX_RING_WIDTH = 360;
 
 export type HomePageOutputCardProps = {
   totalTaxPercentage: number | undefined;
@@ -22,8 +27,10 @@ export function HomePageOutputCard({
   incomeTaxAmount,
   exchangeRatesLoading,
 }: HomePageOutputCardProps) {
-  const totalTaxPercentageOver100 = !!totalTaxPercentage && totalTaxPercentage > 100;
   const snap = useSnapshot(state);
+  const aboveXs = useWidthAbove('xs');
+  const { width: ringWidth, ref: ringRef } = useElementSize();
+  const totalTaxPercentageOver100 = !!totalTaxPercentage && totalTaxPercentage > 100;
   const color = totalTaxPercentage
     ? totalTaxPercentage > 100
       ? 'red'
@@ -82,11 +89,11 @@ export function HomePageOutputCard({
           </div>
         </Group>
       </div>
-      <div className={classes.ring}>
+      <div ref={ringRef} className={classes.ring}>
         <RingProgress
           roundCaps
           thickness={10}
-          size={240}
+          size={aboveXs || ringWidth === 0 ? MIN_RING_WIDTH : Math.min(ringWidth, MAX_RING_WIDTH)}
           sections={[{ value: totalTaxPercentage || 0, color }]}
           label={
             <div>
