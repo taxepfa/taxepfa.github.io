@@ -25,7 +25,8 @@ export function Title() {
         />
       </svg>
       <span className={classes.text}>
-        <span className={classes.dynamicText}>Taxe </span>PFA în {YEAR}
+        <span className={classes.dynamicText}>Taxe </span>PFA <span className={classes.dynamicText}>în </span>
+        {YEAR}
       </span>
     </Center>
   );
