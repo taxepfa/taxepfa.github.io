@@ -1,5 +1,4 @@
 .root {
-  display: flex;
   flex-direction: column;
   @media (min-width: $mantine-breakpoint-xs) {
     flex-direction: row;
@@ -7,7 +6,6 @@
 }
 
 .textItems {
-  display: flex;
   flex-direction: column;
   justify-content: center;
   gap: var(--mantine-spacing-sm);

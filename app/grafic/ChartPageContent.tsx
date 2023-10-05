@@ -1,23 +1,24 @@
 'use client';
 
-import { Card, LoadingOverlay, useMantineTheme } from '@mantine/core';
+import { Card, useMantineTheme } from '@mantine/core';
 import { useElementSize } from '@mantine/hooks';
 import { Area, AreaChart, CartesianGrid, Legend, ReferenceDot, Tooltip, XAxis, YAxis } from 'recharts';
 import { useSnapshot } from 'valtio';
-import { FootNotes } from '~/components/FootNotes';
+import { ChartTooltip } from '~/components/ChartTooltip';
+import { ExchangeRatesLoadingOverlay } from '~/components/ExchangeRatesLoadingOverlay';
 import { InputCard } from '~/components/InputCard';
-import { BASE_CURRENCY, CHART_STEPS, TAXES, TAX_CHART_COLORS, TAX_NAMES } from '~/lib/config';
+import { SettingsInfoCard } from '~/components/SettingsInfoCard';
+import { CHART_STEPS, TAXES, TAX_CHART_COLORS, TAX_NAMES } from '~/lib/config';
 import { formatAsInteger } from '~/lib/format';
 import { state } from '~/lib/state';
 import { useTaxesChart } from '~/lib/taxes';
-import { ChartTooltip } from './ChartTooltip';
 
 export default function ChartPageContent() {
   const snap = useSnapshot(state);
-  const { data, grossIncome, grossIncomeOverVATThreshold, totalTaxPercentage, exchangeRates, exchangeRatesLoading } =
+  const { data, grossIncomeOverVATThreshold, totalTaxPercentage, exchangeRates, exchangeRatesLoading } =
     useTaxesChart(snap) || {};
 
-  const { ref, width } = useElementSize();
+  const { ref: cardRef, width: cardWidth } = useElementSize();
   const { colors } = useMantineTheme();
 
   const yTicks = [0, 50];
@@ -30,21 +31,12 @@ export default function ChartPageContent() {
   return (
     <>
       <InputCard grossIncomeOverVATThreshold={grossIncomeOverVATThreshold} />
-      <Card ref={ref} p="md" h={width ? 'auto' : 180} withBorder radius="md">
-        <LoadingOverlay
-          visible={
-            !width ||
-            ((snap.incomeCurrency !== BASE_CURRENCY ||
-              (snap.deductibleExpenses !== 0 && snap.deductibleExpensesCurrency !== BASE_CURRENCY)) &&
-              exchangeRatesLoading)
-          }
-          zIndex={1000}
-          overlayProps={{ radius: 'sm', blur: 2 }}
-        />
-        {width > 0 && (
+      <Card ref={cardRef} p="md" h={cardWidth ? 'auto' : 180} withBorder radius="md" pos="relative">
+        <ExchangeRatesLoadingOverlay exchangeRatesLoading={exchangeRatesLoading} />
+        {cardWidth > 0 && (
           <AreaChart
-            width={width}
-            height={width / 1.6 + 80}
+            width={cardWidth}
+            height={cardWidth / 1.6 + 80}
             data={data}
             margin={{
               top: 20,
@@ -88,9 +80,9 @@ export default function ChartPageContent() {
           </AreaChart>
         )}
       </Card>
-      <FootNotes
-        grossIncome={grossIncome}
+      <SettingsInfoCard
         grossIncomeOverVATThreshold={grossIncomeOverVATThreshold}
+        exchangeRatesLoading={exchangeRatesLoading}
         exchangeRates={exchangeRates}
       />
     </>

@@ -22,13 +22,14 @@ export function InputCard({ grossIncomeOverVATThreshold }: InputCardProps) {
       <Grid gutter="md" pb="xs">
         <GridCol span={{ xs: 6 }}>
           <NumberInput
+            classNames={{ description: grossIncomeOverVATThreshold ? classes.warning : undefined }}
             hideControls
             required
             min={0}
             label="Venit estimat"
             description={
               grossIncomeOverVATThreshold ? (
-                <Text className={classes.warning} size="xs" c="orange">
+                <Text component="span" size="xs" c="orange">
                   Atenție, vei depăși pragul de TVA!
                 </Text>
               ) : null

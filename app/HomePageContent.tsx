@@ -1,11 +1,11 @@
 'use client';
 
 import { useSnapshot } from 'valtio';
-import { FootNotes } from '~/components/FootNotes';
 import { InputCard } from '~/components/InputCard';
+import { SettingsInfoCard } from '~/components/SettingsInfoCard';
+import { TaxationDetailsCard } from '~/components/TaxationDetailsCard';
 import { state } from '~/lib/state';
 import { useTaxesCalculator } from '~/lib/taxes';
-import { HomePageOutputCard } from './HomePageOutputCard';
 
 export default function HomePageContent() {
   const snap = useSnapshot(state);
@@ -26,7 +26,7 @@ export default function HomePageContent() {
   return (
     <>
       <InputCard grossIncomeOverVATThreshold={grossIncomeOverVATThreshold} />
-      <HomePageOutputCard
+      <TaxationDetailsCard
         totalTaxAmount={totalTaxAmount}
         totalTaxPercentage={totalTaxPercentage}
         healthTaxAmount={healthTaxAmount}
@@ -34,9 +34,9 @@ export default function HomePageContent() {
         incomeTaxAmount={incomeTaxAmount}
         exchangeRatesLoading={exchangeRatesLoading}
       />
-      <FootNotes
-        grossIncome={grossIncome}
+      <SettingsInfoCard
         grossIncomeOverVATThreshold={grossIncomeOverVATThreshold}
+        exchangeRatesLoading={exchangeRatesLoading}
         exchangeRates={exchangeRates}
       />
     </>

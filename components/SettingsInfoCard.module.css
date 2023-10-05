@@ -1,0 +1,15 @@
+.root {
+  flex-direction: column;
+  align-items: center;
+  gap: var(--mantine-spacing-xs);
+}
+
+.icon {
+  color: var(--mantine-color-dimmed);
+  width: rem(36px);
+  height: auto;
+}
+
+.warning {
+  color: var(--mantine-color-orange-6);
+}

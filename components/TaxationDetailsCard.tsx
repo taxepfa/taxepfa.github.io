@@ -1,16 +1,15 @@
-import { Card, Group, LoadingOverlay, RingProgress, Text } from '@mantine/core';
+import { Box, Card, Group, RingProgress, Text } from '@mantine/core';
 import { useElementSize } from '@mantine/hooks';
-import { useSnapshot } from 'valtio';
-import { BASE_CURRENCY, NEXT_YEAR } from '~/lib/config';
+import { NEXT_YEAR } from '~/lib/config';
 import { formatAsBaseCurrency, formatAsPercentage } from '~/lib/format';
-import { state } from '~/lib/state';
 import { useWidthAbove } from '~/lib/utils';
-import classes from './HomePageOutputCard.module.css';
+import { ExchangeRatesLoadingOverlay } from './ExchangeRatesLoadingOverlay';
+import classes from './TaxationDetailsCard.module.css';
 
 const MIN_RING_WIDTH = 240;
-const MAX_RING_WIDTH = 360;
+const MAX_RING_WIDTH = 320;
 
-export type HomePageOutputCardProps = {
+export type TaxationDetailsCardProps = {
   totalTaxPercentage: number | undefined;
   totalTaxAmount: number | undefined;
   pensionTaxAmount: number | undefined;
@@ -19,15 +18,14 @@ export type HomePageOutputCardProps = {
   exchangeRatesLoading: boolean;
 };
 
-export function HomePageOutputCard({
+export function TaxationDetailsCard({
   totalTaxPercentage,
   totalTaxAmount,
   pensionTaxAmount,
   healthTaxAmount,
   incomeTaxAmount,
   exchangeRatesLoading,
-}: HomePageOutputCardProps) {
-  const snap = useSnapshot(state);
+}: TaxationDetailsCardProps) {
   const aboveXs = useWidthAbove('xs');
   const { width: ringWidth, ref: ringRef } = useElementSize();
   const totalTaxPercentageOver100 = !!totalTaxPercentage && totalTaxPercentage > 100;
@@ -40,17 +38,9 @@ export function HomePageOutputCard({
     : 'blue';
 
   return (
-    <Card className={classes.root} withBorder p="md" radius="md" pos="relative">
-      <LoadingOverlay
-        visible={
-          (snap.incomeCurrency !== BASE_CURRENCY ||
-            (snap.deductibleExpenses !== 0 && snap.deductibleExpensesCurrency !== BASE_CURRENCY)) &&
-          exchangeRatesLoading
-        }
-        zIndex={1000}
-        overlayProps={{ radius: 'sm', blur: 2 }}
-      />
-      <div className={classes.textItems}>
+    <Card className={classes.root} withBorder p="md" radius="md" pos="relative" display="flex">
+      <ExchangeRatesLoadingOverlay exchangeRatesLoading={exchangeRatesLoading} />
+      <Box display="flex" className={classes.textItems}>
         <Text className={classes.text} fz={24} lh={1.25}>
           Vei plăti ciolacilor <span className="nowrap">în {NEXT_YEAR}</span>
         </Text>
@@ -88,12 +78,14 @@ export function HomePageOutputCard({
             <Text className={classes.text}>{formatAsBaseCurrency(incomeTaxAmount)}</Text>
           </div>
         </Group>
-      </div>
+      </Box>
       <div ref={ringRef} className={classes.ring}>
         <RingProgress
           roundCaps
           thickness={10}
-          size={aboveXs || ringWidth === 0 ? MIN_RING_WIDTH : Math.min(ringWidth, MAX_RING_WIDTH)}
+          size={
+            aboveXs || ringWidth === 0 ? MIN_RING_WIDTH : Math.max(MIN_RING_WIDTH, Math.min(ringWidth, MAX_RING_WIDTH))
+          }
           sections={[{ value: totalTaxPercentage || 0, color }]}
           label={
             <div>
