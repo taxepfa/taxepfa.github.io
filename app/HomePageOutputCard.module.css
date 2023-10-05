@@ -1,4 +1,4 @@
-.results {
+.root {
   display: flex;
   flex-direction: column;
   @media (min-width: $mantine-breakpoint-xs) {
@@ -6,7 +6,7 @@
   }
 }
 
-.resultTexts {
+.textItems {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -16,13 +16,13 @@
   }
 }
 
-.resultText {
+.text {
   color: light-dark(var(--mantine-color-gray-8), var(--mantine-color-dark-2));
   font-weight: 700;
   line-height: 1;
 }
 
-.resultRing {
+.ring {
   flex: 1;
   display: flex;
   justify-content: center;
