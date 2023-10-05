@@ -74,7 +74,7 @@ export function SettingsInfoCard({
         )}
       </div>
       <Text {...commonTextProps}>
-        Vezi aici <Link href="/setari">setârile</Link>.
+        Vezi aici <Link href="/setari">setările</Link>.
       </Text>
     </Card>
   );

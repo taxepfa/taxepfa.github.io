@@ -3,7 +3,6 @@
   background: transparent;
   border: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
   border-radius: var(--mantine-radius-sm);
-  color: light-dark(var(--mantine-color-gray-8), var(--mantine-color-dark-2));
   &::after {
     content: '';
     position: absolute;

@@ -1,6 +1,7 @@
 'use client';
 
 import { useSnapshot } from 'valtio';
+import { IncomeDetailsCard } from '~/components/IncomeDetailsCard';
 import { InputCard } from '~/components/InputCard';
 import { SettingsInfoCard } from '~/components/SettingsInfoCard';
 import { TaxationDetailsCard } from '~/components/TaxationDetailsCard';
@@ -11,27 +12,47 @@ export default function HomePageContent() {
   const snap = useSnapshot(state);
 
   const {
-    grossIncome,
-    totalTaxAmount,
+    grossIncomeInBaseCurrency,
+    totalTaxAmountInBaseCurrency,
     totalTaxPercentage,
-    pensionTaxAmount,
-    healthTaxAmount,
-    incomeTaxAmount,
+    pensionTaxAmountInBaseCurrency,
+    healthTaxAmountInBaseCurrency,
+    incomeTaxAmountInBaseCurrency,
+    netIncome,
+    totalNetIncomeInBaseCurrency,
     exchangeRates,
     exchangeRatesLoading,
   } = useTaxesCalculator(snap);
 
-  const grossIncomeOverVATThreshold = grossIncome !== undefined && grossIncome > snap.vatThreshold;
+  const accentColor = totalTaxPercentage
+    ? totalTaxPercentage > 100
+      ? 'red'
+      : totalTaxPercentage > 50
+      ? 'orange'
+      : 'blue'
+    : 'blue';
+
+  const grossIncomeOverVATThreshold =
+    grossIncomeInBaseCurrency !== undefined && grossIncomeInBaseCurrency > snap.vatThreshold;
 
   return (
     <>
       <InputCard grossIncomeOverVATThreshold={grossIncomeOverVATThreshold} />
       <TaxationDetailsCard
-        totalTaxAmount={totalTaxAmount}
+        accentColor={accentColor}
+        totalTaxAmountInBaseCurrency={totalTaxAmountInBaseCurrency}
         totalTaxPercentage={totalTaxPercentage}
-        healthTaxAmount={healthTaxAmount}
-        pensionTaxAmount={pensionTaxAmount}
-        incomeTaxAmount={incomeTaxAmount}
+        healthTaxAmountInBaseCurrency={healthTaxAmountInBaseCurrency}
+        pensionTaxAmountInBaseCurrency={pensionTaxAmountInBaseCurrency}
+        incomeTaxAmountInBaseCurrency={incomeTaxAmountInBaseCurrency}
+        exchangeRatesLoading={exchangeRatesLoading}
+      />
+      <IncomeDetailsCard
+        accentColor={accentColor}
+        totalNetIncomeInBaseCurrency={totalNetIncomeInBaseCurrency}
+        netIncome={netIncome}
+        grossIncomeInBaseCurrency={grossIncomeInBaseCurrency}
+        totalTaxPercentage={totalTaxPercentage}
         exchangeRatesLoading={exchangeRatesLoading}
       />
       <SettingsInfoCard

@@ -29,7 +29,7 @@ export function InputCard({ grossIncomeOverVATThreshold }: InputCardProps) {
             label="Venit estimat"
             description={
               grossIncomeOverVATThreshold ? (
-                <Text component="span" size="xs" c="orange">
+                <Text span size="xs" c="orange">
                   Atenție, vei depăși pragul de TVA!
                 </Text>
               ) : null

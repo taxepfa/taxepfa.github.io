@@ -1,6 +1,5 @@
 .root {
   gap: rem(8px);
-  color: light-dark(var(--mantine-color-gray-8), var(--mantine-color-dark-2));
 }
 
 .logo {

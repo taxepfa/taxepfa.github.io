@@ -42,7 +42,7 @@ export function calculateTaxes({
   if (incomeCurrency !== BASE_CURRENCY) income *= exchangeRates![incomeCurrency];
 
   // save the gross income to return it later
-  const grossIncome = income;
+  const grossIncomeInBaseCurrency = income;
 
   if (deductibleExpensesInterval === 'monthly') deductibleExpenses *= 12;
 
@@ -53,47 +53,57 @@ export function calculateTaxes({
   income -= deductibleExpenses;
 
   // calculate the pension tax amount (CAS) and percentage of the gross income
-  let pensionTaxAmount = 0;
-  if (income >= minimumWage * 24) pensionTaxAmount = minimumWage * 24 * PENSION_PERCENTAGE;
-  else if (income >= minimumWage * 12) pensionTaxAmount = minimumWage * 12 * PENSION_PERCENTAGE;
-  const pensionTaxPercentage = grossIncome === 0 ? 0 : (pensionTaxAmount / grossIncome) * 100;
+  let pensionTaxAmountInBaseCurrency = 0;
+  if (income >= minimumWage * 24) pensionTaxAmountInBaseCurrency = minimumWage * 24 * PENSION_PERCENTAGE;
+  else if (income >= minimumWage * 12) pensionTaxAmountInBaseCurrency = minimumWage * 12 * PENSION_PERCENTAGE;
+  const pensionTaxPercentage =
+    grossIncomeInBaseCurrency === 0 ? 0 : (pensionTaxAmountInBaseCurrency / grossIncomeInBaseCurrency) * 100;
 
   // calculate the health tax amount (CASS) and percentage of the gross income
-  let healthTaxAmount = 0;
-  if (income >= minimumWage * 60) healthTaxAmount = minimumWage * 60 * HEALTH_PERCENTAGE;
-  else if (income >= minimumWage * 6) healthTaxAmount = income * HEALTH_PERCENTAGE;
-  else healthTaxAmount = minimumWage * 6 * HEALTH_PERCENTAGE;
-  const healthTaxPercentage = (healthTaxAmount / grossIncome) * 100;
+  let healthTaxAmountInBaseCurrency = 0;
+  if (income >= minimumWage * 60) healthTaxAmountInBaseCurrency = minimumWage * 60 * HEALTH_PERCENTAGE;
+  else if (income >= minimumWage * 6) healthTaxAmountInBaseCurrency = income * HEALTH_PERCENTAGE;
+  else healthTaxAmountInBaseCurrency = minimumWage * 6 * HEALTH_PERCENTAGE;
+  const healthTaxPercentage = (healthTaxAmountInBaseCurrency / grossIncomeInBaseCurrency) * 100;
 
   // calculate the taxable income and make sure it's not negative
-  const taxableIncome = Math.max(income - pensionTaxAmount - healthTaxAmount - deductibleExpenses, 0);
+  const taxableIncome = Math.max(
+    income - pensionTaxAmountInBaseCurrency - healthTaxAmountInBaseCurrency - deductibleExpenses,
+    0
+  );
 
   // calculate the income tax amount and percentage of the gross income
-  const incomeTaxAmount = taxableIncome * INCOME_TAX_PERCENTAGE;
-  const incomeTaxPercentage = grossIncome === 0 ? 0 : (incomeTaxAmount / grossIncome) * 100;
+  const incomeTaxAmountInBaseCurrency = taxableIncome * INCOME_TAX_PERCENTAGE;
+  const incomeTaxPercentage =
+    grossIncomeInBaseCurrency === 0 ? 0 : (incomeTaxAmountInBaseCurrency / grossIncomeInBaseCurrency) * 100;
 
   // calculate the total tax amount and percentage of the gross income
-  const totalTaxAmount = pensionTaxAmount + healthTaxAmount + incomeTaxAmount;
-  const totalTaxPercentage = (totalTaxAmount / grossIncome) * 100;
+  const totalTaxAmountInBaseCurrency =
+    pensionTaxAmountInBaseCurrency + healthTaxAmountInBaseCurrency + incomeTaxAmountInBaseCurrency;
+  const totalTaxPercentage = (totalTaxAmountInBaseCurrency / grossIncomeInBaseCurrency) * 100;
 
-  // calculate the net income in user-selected currency, per user-selected interval
-  let netIncome = grossIncome - totalTaxAmount;
+  // calculate the total net income in base currency
+  const totalNetIncomeInBaseCurrency = grossIncomeInBaseCurrency - totalTaxAmountInBaseCurrency;
+
+  // convert the total net income to the income currency if needed and adjust it for the income interval
+  let netIncome = totalNetIncomeInBaseCurrency;
   if (incomeCurrency !== BASE_CURRENCY) netIncome /= exchangeRates![incomeCurrency];
   if (incomeInterval === 'hourly') netIncome /= workingHoursPerWeek * (WEEKS_PER_YEAR - vacationWeeksPerYear);
   else if (incomeInterval === 'daily') netIncome /= workingDaysPerWeek * (WEEKS_PER_YEAR - vacationWeeksPerYear);
   else if (incomeInterval === 'monthly') netIncome /= 12 - vacationWeeksPerYear / WEEKS_PER_MONTH;
 
   return {
-    grossIncome,
-    grossIncomeOverVATThreshold: grossIncome > vatThreshold,
+    grossIncomeInBaseCurrency,
+    grossIncomeOverVATThreshold: grossIncomeInBaseCurrency > vatThreshold,
+    totalNetIncomeInBaseCurrency,
     netIncome,
-    totalTaxAmount,
+    totalTaxAmountInBaseCurrency,
     totalTaxPercentage,
-    pensionTaxAmount,
+    pensionTaxAmountInBaseCurrency,
     pensionTaxPercentage,
-    healthTaxAmount,
+    healthTaxAmountInBaseCurrency,
     healthTaxPercentage,
-    incomeTaxAmount,
+    incomeTaxAmountInBaseCurrency,
     incomeTaxPercentage,
   };
 }
