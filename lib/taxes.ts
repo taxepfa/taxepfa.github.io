@@ -76,9 +76,17 @@ export function calculateTaxes({
   const totalTaxAmount = pensionTaxAmount + healthTaxAmount + incomeTaxAmount;
   const totalTaxPercentage = (totalTaxAmount / grossIncome) * 100;
 
+  // calculate the net income in user-selected currency, per user-selected interval
+  let netIncome = grossIncome - totalTaxAmount;
+  if (incomeCurrency !== BASE_CURRENCY) netIncome /= exchangeRates![incomeCurrency];
+  if (incomeInterval === 'hourly') netIncome /= workingHoursPerWeek * (WEEKS_PER_YEAR - vacationWeeksPerYear);
+  else if (incomeInterval === 'daily') netIncome /= workingDaysPerWeek * (WEEKS_PER_YEAR - vacationWeeksPerYear);
+  else if (incomeInterval === 'monthly') netIncome /= 12 - vacationWeeksPerYear / WEEKS_PER_MONTH;
+
   return {
     grossIncome,
     grossIncomeOverVATThreshold: grossIncome > vatThreshold,
+    netIncome,
     totalTaxAmount,
     totalTaxPercentage,
     pensionTaxAmount,
