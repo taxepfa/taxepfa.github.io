@@ -1,6 +1,5 @@
 .root {
   gap: rem(8px);
-  color: light-dark(var(--mantine-color-gray-8), var(--mantine-color-dark-2));
 }
 
 .logo {
@@ -9,7 +8,7 @@
 
 .text {
   margin-top: rem(3px);
-  font-size: var(--mantine-font-size-xl);
+  font-size: rem(22px);
   line-height: 1;
 }
 
@@ -18,7 +17,7 @@
   @media (min-width: $mantine-breakpoint-xs) {
     display: none;
   }
-  @media (min-width: rem(680px)) {
+  @media (min-width: rem(700px)) {
     display: inline;
   }
 }
