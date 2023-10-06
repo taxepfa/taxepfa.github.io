@@ -18,8 +18,8 @@ export type InputCardProps = {
 export function InputCard({ grossIncomeOverVATThreshold }: InputCardProps) {
   const snap = useSnapshot(state);
   return (
-    <Card p="md" withBorder radius="md">
-      <Grid gutter="md" pb="xs">
+    <Card p="md" pb="lg" withBorder radius="md">
+      <Grid gutter="md">
         <GridCol span={{ xs: 6 }}>
           <NumberInput
             classNames={{ description: grossIncomeOverVATThreshold ? classes.warning : undefined }}

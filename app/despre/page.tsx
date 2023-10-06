@@ -1,7 +1,11 @@
-import { Card, Text, Title } from '@mantine/core';
+import { Card, Text, TextProps, Title, TitleProps } from '@mantine/core';
 import { Metadata } from 'next';
+import { ExternalLink } from '~/components/ExternalLink';
 import { Page } from '~/components/Page';
 import { APP_NAME, AUTHOR_NAME, AUTHOR_URL, YEAR } from '~/lib/config';
+
+const textProps: TextProps = { size: 'sm', mb: 'sm' };
+const subtitleProps: TitleProps = { order: 3, size: 'sm', mt: 'md', mb: 'sm' };
 
 export const metadata: Metadata = {
   title: `Despre proiect | ${APP_NAME}`,
@@ -15,128 +19,122 @@ export default function AboutPage() {
         <Title order={2} mt="xs" mb="xl">
           Despre proiect
         </Title>
-        <Text size="sm" mb="sm">
-          Acest calculator rapid de taxe pentru PFA a fost realizat de{' '}
-          <a href={AUTHOR_URL} target="_blank">
-            {AUTHOR_NAME}
-          </a>{' '}
-          cu TypeScript, React, Next.js,{' '}
-          <a href="https://mantine.dev" target="_blank">
-            Mantine
-          </a>
-          ,{' '}
-          <a href="https://valtio.pmnd.rs/docs/introduction/getting-started" target="_blank">
-            Valtio
-          </a>{' '}
-          și un pic de <em>common-sense</em>.
+        <Text {...textProps}>
+          Am construit acest calculator rapid de taxe pentru PFA folosind TypeScript, React, Next.js,{' '}
+          <ExternalLink to="https://mantine.dev">Mantine</ExternalLink>,{' '}
+          <ExternalLink to="https://valtio.pmnd.rs/docs/introduction/getting-started">Valtio</ExternalLink> și un pic de{' '}
+          <em>common-sense</em>.
         </Text>
-        <Title order={3} size="sm" mt="md" mb="sm">
-          De ce?
-        </Title>
-        <Text size="sm" mb="sm">
+        <Title {...subtitleProps}>De ce l-am făcut?</Title>
+        <Text {...textProps}>
           Pentru că după ce ciolacii au mărit birurile, în presa românească au apărut tot felul de articole în care
           diverși autointitulați experți în fiscalitate au declarat că activitatea desfășurată PFA nu este rentabilă și
           că ar trebui să-ți înființezi o firmă.
         </Text>
-        <Text size="sm" mb="sm">
-          Ceea ce este fals.
-        </Text>
-        <Text size="sm" mb="sm">
+        <Text {...textProps}>Ceea ce este fals.</Text>
+        <Text {...textProps}>
           Nu uita că o parte din acești experți sunt contabili care au un interes direct în a-ți vinde servicii de
           contabilitate, nu privesc <em>the big picture</em> din punctul <strong>tău</strong> de vedere, sau pur și
           simplu scriu pentru <em>click-bait</em>.
         </Text>
-        <Text size="sm" mb="sm">
+        <Text {...textProps}>
           Dacă îți vei înființa o firmă, vei avea un <em>overhead</em> administrativ mai mare și va trebui să
           contractezi serviciile unui contabil pe care îl vei plăti lunar, indiferent dacă ai sau nu venituri.
         </Text>
-        <Text size="sm" mb="sm">
+        <Text {...textProps}>
           Dacă lucrezi ca <em>freelancer</em> și nu ești un angajat disimulat în PFA sau SRL, probabil că nu vei avea
           venituri constante, sau poate chiar vei avea perioade în care, din diverse motive, nu vei încasa nimic. Poate
           că îti vei permite o vacanță sabatică, poate că vei decide că ceea ce ai câștigat în lunile anterioare este
           suficient pentru a-ți permite să nu lucrezi o perioadă și să îți folosești timpul pentru a învăța ceva nou.
         </Text>
-        <Text size="sm" mb="sm">
+        <Text {...textProps}>
           Dacă ești PFA și îți ții singur contabilitatea în perioadele în care nu ai venituri, nu trebuie să depui nicio
           declarație și nu va trebui să plătești pe nimeni.
         </Text>
-        <Text size="sm" mb="sm">
+        <Text {...textProps}>
           Cu alte cuvinte, poți lucra <em>on-and-off</em>, iar atunci când ești <em>off</em>, nu vei avea nicio
           cheltuială sau bătaie de cap.
         </Text>
-        <Text size="sm" mb="sm">
+        <Text {...textProps}>
           Nu mă declar expert, însă nu vorbesc din <span className="nowrap">(‿|‿)</span>, ci din experiență. De-a lungul
           anilor am lucrat ca angajat, ca PFA, și pentru o perioadă de timp am deținut o firmă.
         </Text>
-        <Text size="sm" mb="sm">
+        <Text {...textProps}>
           Sper ca acest calculator să te ajute să iei o decizie informată în ceea ce privește statutul tău fiscal.
         </Text>
-        <Title order={3} size="sm" mt="md" mb="sm">
-          Despre autor
+        <Title {...subtitleProps}>
+          De ce să plătesc CASS dacă nu am venit?
+          <br />
+          Nu cumva e o greșeală în formula de calcul?
         </Title>
-        <Text size="sm" mb="sm">
-          Sunt{' '}
-          <a href={AUTHOR_URL} target="_blank">
-            {AUTHOR_NAME}
-          </a>
+        <Text {...textProps}>
+          Nu, nu este o greșeală.
+          <br />
+          Sau dacă există, aceasta nu se află în acest calculator, ci în modificarea adusă Codului Fiscal în toamna
+          anului 2023 fără nici un studiu real de impact și fără nicio considerație pentru cei care lucrează ca PFA și
+          se pot afla în această situație.
+          <br />
+          Cu alte cuvinte trebuie să plătești CASS, chiar dacă ajungi în pierdere, pentru că așa au decretat ciolacii că{' '}
+          <strong>datorezi</strong>.
+          <br />
+          În documentul legislativ intitulat{' '}
+          <em>
+            „LEGE privind unele măsuri fiscal bugetare pentru asigurarea sustenabilității financiare a Rom‚niei pe
+            termen lung”
+          </em>{' '}
+          există următorul paragraf ambiguu:
+        </Text>
+        <Text {...textProps} fs="italic" pl="sm">
+          (5) În situația în care baza de calcul prevăzută la art. 170 alin. (1), cumulată din una sau mai multe surse
+          de venit din cele prevăzute la art. 155 alin. (1) lit. b), corespunzătoare veniturilor estimate/realizate sau
+          pentru care s-a aplicat reținerea la sursă în cursul anului, după caz, este mai mică decât cea corespunzătoare
+          unei baze de calcul egală cu nivelul de 6 salarii minime brute pe țară în vigoare la termenul de depunere a
+          declarației prevăzute la art. 120, persoanele fizice <strong>datorează</strong> o diferență de contribuție de
+          asigurări sociale de sănătate până la nivelul celei corespunzătoare bazei de calcul egală cu 6 salarii minime
+          brute pe țară în vigoare la termenul de depunere a declarației prevăzute la art. 120 şi depun 18 declarația
+          prevăzută la art. 122, până la data de 25 mai inclusiv a anului următor celui de realizare a veniturilor.
+        </Text>
+        <Text {...textProps}>
+          Cost of doing honest business in Romania.
+          <br />
+          Poți să o privești ca pe o „taxă de protecție”.
+          <br />
+          Dar hei, stai liniștit, totul va fi bine.
+          <br />
+          Guvernul și organele statului au nevoie de mici antreprenori ca tine și de aceea lucrează neîncetat pentru
+          bunăstarea ta. Nu am nicio îndoială că în cele din urmă vei primi înapoi banii pe care i-ai plătit, sub forma
+          unor servicii de sănătate la cele mai înalte standarde.
+        </Text>
+        <Title {...subtitleProps}>Despre autor</Title>
+        <Text {...textProps}>
+          Sunt <ExternalLink to={AUTHOR_URL}>{AUTHOR_NAME}</ExternalLink>
           , dezvoltator software/web cu peste 20 ani de experiență în domeniu.
           <br />
           Am lucrat pentru companii mari din România și din străinătate, dar și pentru clienți mici și mijlocii, atât în
           calitate de angajat, cât și ca <em>freelancer</em>.
         </Text>
-        <Text size="sm" mb="sm">
+        <Text {...textProps}>
           În ultimii ani m-am concentrat pe dezvoltarea de aplicații web folosind tehnologii precum React/Next.js,
           Svelte/SvelteKit, Node.js, TypeScript, tRPC, GraphQL, PostgreSQL, Docker, etc.
         </Text>
-        <Text size="sm" mb="sm">
+        <Text {...textProps}>
           Sunt autorul unui număr de proiecte open-source de succes, printre care{' '}
-          <a href="https://icflorescu.github.io/mantine-datatable/" target="_blank">
-            Mantine DataTable
-          </a>
-          ,{' '}
-          <a href="https://icflorescu.github.io/mantine-contextmenu/" target="_blank">
-            Mantine ContextMenu
-          </a>
-          ,{' '}
-          <a href="https://icflorescu.github.io/trpc-sveltekit/" target="_blank">
-            tRPC-SvelteKit
-          </a>
-          ,{' '}
-          <a href="https://pocketbase-uml.github.io" target="_blank">
-            PocketBaseUML
-          </a>
-          ,{' '}
-          <a href="https://github.com/icflorescu/expose-wsl" target="_blank">
-            Expose-WSL
-          </a>
-          ,{' '}
-          <a href="https://github.com/icflorescu/iisexpress-proxy" target="_blank">
-            IISExpressProxy
-          </a>{' '}
-          și{' '}
-          <a href={AUTHOR_URL} target="_blank">
-            altele
-          </a>
-          .
+          <ExternalLink to="https://icflorescu.github.io/mantine-datatable/">Mantine DataTable</ExternalLink>,{' '}
+          <ExternalLink to="https://icflorescu.github.io/mantine-contextmenu/">Mantine ContextMenu</ExternalLink>,{' '}
+          <ExternalLink to="https://icflorescu.github.io/trpc-sveltekit/">tRPC-SvelteKit</ExternalLink>,{' '}
+          <ExternalLink to="https://pocketbase-uml.github.io">PocketBaseUML</ExternalLink>,{' '}
+          <ExternalLink to="https://github.com/icflorescu/expose-wsl">Expose-WSL</ExternalLink>,{' '}
+          <ExternalLink to="https://github.com/icflorescu/iisexpress-proxy">IISExpressProxy</ExternalLink> și{' '}
+          <ExternalLink to={AUTHOR_URL}>altele</ExternalLink>.
         </Text>
-        <Text size="sm" mb="sm">
-          Pe GitHub mă găsești{' '}
-          <a href={AUTHOR_URL} target="_blank">
-            aici
-          </a>
-          , iar pe LinkedIn{' '}
-          <a href="https://www.linkedin.com/in/icflorescu/" target="_blank">
-            aici
-          </a>
-          .
+        <Text {...textProps}>
+          Pe GitHub mă găsești <ExternalLink to={AUTHOR_URL}>aici</ExternalLink>, iar pe LinkedIn{' '}
+          <ExternalLink to="https://www.linkedin.com/in/icflorescu/">aici</ExternalLink>.
         </Text>
-        <Text size="sm" mb="lg">
+        <Text {...textProps}>
           Dacă ai nevoie de ajutor în dezvoltare web care implică vreuna din tehnologiile menționate mai sus, nu ezita
           să-mi dai un semn la adresa de email menționată în{' '}
-          <a href={AUTHOR_URL} target="_blank">
-            contul meu de GitHub
-          </a>
-          .
+          <ExternalLink to={AUTHOR_URL}>contul meu de GitHub</ExternalLink>.
         </Text>
       </Card>
     </Page>

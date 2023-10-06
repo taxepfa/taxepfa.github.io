@@ -9,7 +9,7 @@ export default function SettingsPageContent() {
   const snap = useSnapshot(state);
 
   return (
-    <Card p="md" withBorder radius="md">
+    <Card p="md" pb="lg" withBorder radius="md">
       <Stack gap="md">
         <NumberInput
           hideControls
