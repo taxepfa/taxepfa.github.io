@@ -12,7 +12,7 @@ export function Footer() {
         <br />
         Codul-sursă este disponibil pe GitHub.
         <br />
-        Dacă ești dezvoltator, știi unde și cum să contribui.
+        Dacă ești dezvoltator, ar trebui să știi unde și cum să contribui.
         <br />
         Dacă lucrezi ca PFA, te-ar putea interesa și <ExternalLink to="https://swapp.ro">swapp.ro</ExternalLink>.
       </Text>
