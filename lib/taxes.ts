@@ -122,6 +122,7 @@ export type ChartDataPoint = {
   pensionTaxPercentage: number;
   healthTaxPercentage: number;
   incomeTaxPercentage: number;
+  netIncome: number;
 };
 
 export function useTaxesChart({ income, ...otherParams }: State) {
@@ -135,7 +136,7 @@ export function useTaxesChart({ income, ...otherParams }: State) {
   const step = incomeTo / CHART_STEPS;
 
   for (let i = 0; i <= incomeTo; i += step) {
-    const { pensionTaxPercentage, healthTaxPercentage, incomeTaxPercentage } = calculateTaxes({
+    const { pensionTaxPercentage, healthTaxPercentage, incomeTaxPercentage, netIncome } = calculateTaxes({
       income: i === 0 ? 0.1 : i,
       ...otherParams,
       exchangeRates,
@@ -146,6 +147,7 @@ export function useTaxesChart({ income, ...otherParams }: State) {
       pensionTaxPercentage,
       healthTaxPercentage,
       incomeTaxPercentage,
+      netIncome,
     });
   }
 

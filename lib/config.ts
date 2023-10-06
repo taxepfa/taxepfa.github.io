@@ -1,3 +1,5 @@
+import { MantineColor } from '@mantine/core';
+
 export const YEAR = 2024;
 export const NEXT_YEAR = YEAR + 1;
 
@@ -58,10 +60,10 @@ export const TAX_NAMES = {
   incomeTaxPercentage: 'Imp. pe venit',
 } as const;
 
-export const TAX_CHART_COLORS = {
-  healthTaxPercentage: 'red',
+export const TAX_CHART_COLORS: Record<string, MantineColor> = {
+  healthTaxPercentage: 'pink',
   pensionTaxPercentage: 'grape',
-  incomeTaxPercentage: 'teal',
+  incomeTaxPercentage: 'orange',
 } as const;
 
 export const LOCAL_STORAGE_STATE_KEY = 'state';

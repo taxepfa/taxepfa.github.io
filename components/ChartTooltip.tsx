@@ -1,54 +1,71 @@
-import { Box, Group, Text, useMantineTheme } from '@mantine/core';
+import { Box, Group, GroupProps, MantineColor, Text, TextProps, useMantineTheme } from '@mantine/core';
 import { INCOME_INTERVALS, IncomeInterval, TAXES, TAX_CHART_COLORS, TAX_NAMES } from '~/lib/config';
-import { formatAsDecimalPercentage, formatAsInteger } from '~/lib/format';
+import { formatAsDecimal, formatAsDecimalPercentage, formatAsInteger } from '~/lib/format';
+import { ChartDataPoint } from '~/lib/taxes';
 import classes from './ChartTooltip.module.css';
 
+const commonTextProps: TextProps = { size: 'xs', fw: 'bold' };
+const commonGroupProps: GroupProps = { justify: 'space-between', px: 'xs' };
+
 export type ChartTooltipProps = {
-  income: number;
   incomeInterval: IncomeInterval;
   incomeCurrency: string;
-  healthTaxPercentage: number;
-  pensionTaxPercentage: number;
-  incomeTaxPercentage: number;
-};
+} & ChartDataPoint;
 
 export function ChartTooltip(props: ChartTooltipProps) {
-  const { income, incomeCurrency, incomeInterval, healthTaxPercentage, pensionTaxPercentage, incomeTaxPercentage } =
-    props;
+  const {
+    income,
+    incomeCurrency,
+    incomeInterval,
+    healthTaxPercentage,
+    pensionTaxPercentage,
+    incomeTaxPercentage,
+    netIncome,
+  } = props;
   const totalTaxPercentage = healthTaxPercentage + pensionTaxPercentage + incomeTaxPercentage;
+  const incomeIntervalName = INCOME_INTERVALS.find((i) => i.value === incomeInterval)?.label;
   const { colors } = useMantineTheme();
+  const negativeIncome = netIncome < 0;
+  const netIncomeColor: MantineColor | undefined = negativeIncome ? 'red' : undefined;
+
   return (
     <Box py="xs" className={classes.root}>
-      <Group justify="space-between" px="xs" pb={6} mb={6} className={classes.header}>
-        <Text size="xs" fw="bold">
-          Venit:
-        </Text>
-        <Text size="xs" fw="bold">
-          {formatAsInteger(income)} {incomeCurrency} {INCOME_INTERVALS.find((i) => i.value === incomeInterval)?.label}
+      <Group {...commonGroupProps} pb={6} mb={6} className={classes.header}>
+        <Text {...commonTextProps}>Venit brut:</Text>
+        <Text {...commonTextProps}>
+          {formatAsInteger(income)} {incomeCurrency} {incomeIntervalName}
         </Text>
       </Group>
       {TAXES.map((tax) => {
         const taxPercentage = props[tax];
         const color = colors[TAX_CHART_COLORS[tax]][6];
         return (
-          <Group key={tax} justify="space-between" px="xs">
-            <Text size="xs" c={color} fw="bold">
+          <Group key={tax} {...commonGroupProps}>
+            <Text {...commonTextProps} c={color}>
               {TAX_NAMES[tax]}:
             </Text>
-            <Text size="xs" c={color} fw="bold">
+            <Text {...commonTextProps} c={color}>
               {taxPercentage > 100 ? 'peste 100%' : formatAsDecimalPercentage(taxPercentage)}
             </Text>
           </Group>
         );
       })}
-      <Group justify="space-between" px="xs" pt={8} mt={6} className={classes.footer}>
-        <Text size="xs" fw="bold">
-          Total taxe:
-        </Text>
-        <Text size="xs" fw="bold">
-          {totalTaxPercentage > 100 ? 'peste 100%' : formatAsDecimalPercentage(totalTaxPercentage)}
-        </Text>
-      </Group>
+      <Box pt={8} mt={6} className={classes.footer}>
+        <Group {...commonGroupProps}>
+          <Text {...commonTextProps}>Total taxe:</Text>
+          <Text {...commonTextProps}>
+            {totalTaxPercentage > 100 ? 'peste 100%' : formatAsDecimalPercentage(totalTaxPercentage)}
+          </Text>
+        </Group>
+        <Group {...commonGroupProps}>
+          <Text {...commonTextProps} c={netIncomeColor}>
+            {negativeIncome ? 'Pierdere netă' : 'Venit net'}:
+          </Text>
+          <Text {...commonTextProps} c={netIncomeColor}>
+            {formatAsDecimal(Math.abs(netIncome))} {incomeCurrency} {incomeIntervalName}
+          </Text>
+        </Group>
+      </Box>
     </Box>
   );
 }
