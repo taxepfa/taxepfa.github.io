@@ -21,7 +21,7 @@ Among other things, the changes include a minimum fixed-amount health insurance 
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-**IMPORTANT!** 👇
+**IMPORTANT!** 👇  
 Pushing to the `main` branch triggers a GitHub workflow, so make sure to target your PRs to the `dev` branch.
 
 ## Hire and support the author
