@@ -43,7 +43,7 @@ export function IncomePercentageRing({ type, value, color }: IncomePercentageRin
                 ) : (
                   'aproximativ'
                 )}
-                <Text c={color} fz={64} fw={700} lh={1}>
+                <Text span inherit display="block" c={color} fz={64} fw={700} lh={1}>
                   {formatAsPercentage(valueOver100 ? 100 : value)}
                 </Text>
                 din venitul tău
