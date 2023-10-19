@@ -6,7 +6,7 @@ export type SelectProps = {
   withDescriptionSpace?: boolean;
   data: (string | { value: string; label: string })[];
   value: string;
-  onChange: (val: string) => void;
+  onChange: (val: string | null) => void;
 };
 
 export function Select({ ariaLabel, withDescriptionSpace, data, value, onChange }: SelectProps) {

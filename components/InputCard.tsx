@@ -45,7 +45,7 @@ export function InputCard({ grossIncomeOverVATThreshold }: InputCardProps) {
             ariaLabel="Moneda venitului"
             data={CURRENCIES}
             value={snap.incomeCurrency}
-            onChange={(val: string) => (state.incomeCurrency = val)}
+            onChange={(val) => (state.incomeCurrency = val!)}
           />
         </GridCol>
         <GridCol span={{ base: 6, xs: 3 }}>
@@ -53,7 +53,7 @@ export function InputCard({ grossIncomeOverVATThreshold }: InputCardProps) {
             ariaLabel="Intervalul pe care este estimat venitul"
             data={INCOME_INTERVALS}
             value={snap.incomeInterval}
-            onChange={(val: string) => (state.incomeInterval = val as IncomeInterval)}
+            onChange={(val) => (state.incomeInterval = val as IncomeInterval)}
           />
         </GridCol>
 
@@ -129,7 +129,7 @@ export function InputCard({ grossIncomeOverVATThreshold }: InputCardProps) {
             ariaLabel="Moneda cheltuielilor deductibile"
             data={CURRENCIES}
             value={snap.deductibleExpensesCurrency}
-            onChange={(val: string) => (state.deductibleExpensesCurrency = val)}
+            onChange={(val) => (state.deductibleExpensesCurrency = val!)}
           />
         </GridCol>
         <GridCol span={{ base: 6, xs: 3 }}>
@@ -137,7 +137,7 @@ export function InputCard({ grossIncomeOverVATThreshold }: InputCardProps) {
             ariaLabel="Intervalul pe care sunt estimate cheultuielile deductibile"
             data={DEDUCTIBLE_EXPENSES_INTERVALS}
             value={snap.deductibleExpensesInterval}
-            onChange={(val: string) => (state.deductibleExpensesInterval = val as DeductibleExpensesInterval)}
+            onChange={(val) => (state.deductibleExpensesInterval = val as DeductibleExpensesInterval)}
           />
         </GridCol>
       </Grid>

@@ -128,7 +128,7 @@ export type ChartDataPoint = {
 export function useTaxesChart({ income, ...otherParams }: State) {
   const { exchangeRates, exchangeRatesLoading } = useExchangeRates();
 
-  let data: ChartDataPoint[] = [];
+  const data: ChartDataPoint[] = [];
 
   if (!exchangeRates || income === 0) return;
 
