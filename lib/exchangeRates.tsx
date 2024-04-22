@@ -11,7 +11,7 @@ export type ExchangeRates = Record<string, number>;
 
 export function useExchangeRates() {
   const { data, isLoading } = useSWR(
-    `https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/${BASE_CURRENCY_LOWER_CASE.toLowerCase()}.min.json`,
+    `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/${BASE_CURRENCY_LOWER_CASE.toLowerCase()}.min.json`,
     fetcher,
     {
       refreshInterval: EXCHANGE_RATES_RELOAD_INTERVAL,

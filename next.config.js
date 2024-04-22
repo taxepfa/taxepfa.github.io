@@ -5,14 +5,16 @@ const { version: APP_VERSION } = require('./package.json');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  swcMinify: true,
   output: 'export',
-  compiler: {
-    removeConsole: process.env.NODE_ENV === 'production',
-  },
-  env: {
-    APP_VERSION,
+  env: { APP_VERSION },
+  experimental: {
+    optimizePackageImports: [
+      '@mantine/core',
+      '@mantine/dates',
+      '@mantine/hooks',
+      '@mantine/modals',
+      '@mantine/notifications',
+    ],
   },
 };
 
