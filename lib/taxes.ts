@@ -68,7 +68,7 @@ export function calculateTaxes({
 
   // calculate the taxable income and make sure it's not negative
   const taxableIncome = Math.max(
-    income - pensionTaxAmountInBaseCurrency - healthTaxAmountInBaseCurrency - deductibleExpenses,
+    income - pensionTaxAmountInBaseCurrency - healthTaxAmountInBaseCurrency,
     0
   );
 
