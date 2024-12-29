@@ -15,7 +15,9 @@ export const WEEKS_PER_MONTH = 4.34524;
 
 export const PENSION_PERCENTAGE = 0.25;
 export const HEALTH_PERCENTAGE = 0.1;
+export const PERSONAL_DEDUCTIBLE = 0.2;
 export const INCOME_TAX_PERCENTAGE = 0.1;
+export const WAGE_COMPANY_TAX_PERCENTAGE = 0.0225;
 export const BASE_CURRENCY = 'RON';
 export const CURRENCIES = [BASE_CURRENCY, 'EUR', 'USD', 'GBP', 'CHF', 'CAD', 'AUD'];
 export const EXCHANGE_RATES_RELOAD_INTERVAL = 3_600_000;

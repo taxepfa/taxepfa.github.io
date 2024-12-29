@@ -28,7 +28,7 @@ export function IncomeDetailsCard({
   const textAlign: MantineStyleProps['ta'] = { base: 'center', xs: 'left' };
 
   return (
-    <Card withBorder p="md" radius="md" pos="relative">
+    <Card p="md" radius="md" pos="relative">
       <Flex direction={{ base: 'column', xs: 'row' }} align={{ base: 'center', xs: 'flex-start' }}>
         <ExchangeRatesLoadingOverlay exchangeRatesLoading={exchangeRatesLoading} />
         <Flex direction="column" gap={{ base: 'sm', xs: 'lg' }} align={{ base: 'center', xs: 'flex-start' }}>
