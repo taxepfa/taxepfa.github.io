@@ -25,7 +25,7 @@ export const initialState: State = {
   deductibleExpenses: 0,
   deductibleExpensesCurrency: BASE_CURRENCY,
   deductibleExpensesInterval: 'monthly',
-  minimumWage: 3_300,
+  minimumWage: 4_050,
   vatThreshold: 300_000,
 };
 
