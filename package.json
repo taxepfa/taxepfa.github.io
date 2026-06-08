@@ -7,8 +7,7 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "test": "node .github/setup.js"
+    "lint": "next lint"
   },
   "devDependencies": {
     "@mantine/core": "^7.14.2",
