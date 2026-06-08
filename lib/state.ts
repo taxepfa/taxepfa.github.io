@@ -26,7 +26,7 @@ export const initialState: State = {
   deductibleExpensesCurrency: BASE_CURRENCY,
   deductibleExpensesInterval: 'monthly',
   minimumWage: 3_300,
-  vatThreshold: 300_000,
+  vatThreshold: 395_000,
 };
 
 export const state = proxy<State>(initialState);
