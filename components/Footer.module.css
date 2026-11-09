@@ -1,6 +1,0 @@
-.root {
-  margin-top: var(--mantine-spacing-md);
-  @media (min-width: $mantine-breakpoint-xs) {
-    margin-top: var(--mantine-spacing-xl);
-  }
-}

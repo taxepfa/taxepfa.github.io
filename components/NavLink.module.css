@@ -1,7 +1,0 @@
-.current {
-  &,
-  &:focus,
-  &:not(:hover) {
-    color: light-dark(var(--mantine-color-blue-8), var(--mantine-color-blue-4));
-  }
-}
